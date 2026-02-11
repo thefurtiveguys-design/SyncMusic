@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>VIF · template vibrant</title>
+  <!-- Un seul fichier — HTML / CSS / JS intégrés, prêt à l’emploi -->
+  <style>
+    /* === 🌀 RESET & VARIABLES — base VIF (vif, intuitif, flexible) === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --vif-bg: #fdfaf8;
+      --vif-text: #1e1e2a;
+      --vif-primary: #ff4d6d;
+      --vif-secondary: #ffb347;
+      --vif-soft: #ffe6e9;
+      --vif-accent: #6a4c93;
+      --vif-mint: #8acb88;
+      --vif-gray: #f0ecec;
+      --vif-border: rgba(0,0,0,0.05);
+      --vif-shadow: 0 12px 28px -8px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.02);
+      --vif-radius: 28px;
+      --vif-radius-sm: 18px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--vif-bg);
+      color: var(--vif-text);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* en-tête doux, navigation simple */
+    .vif-header {
+      padding: 1.8rem 2rem 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--vif-border);
+    }
+
+    .logo {
+      font-weight: 720;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, var(--vif-primary), var(--vif-accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span {
+      background: var(--vif-soft);
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      color: var(--vif-primary);
+      background-clip: unset;
+      -webkit-background-clip: unset;
+      background: #ffe8e8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 520;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--vif-text);
+      opacity: 0.8;
+      transition: 0.2s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      border-bottom-color: var(--vif-primary);
+    }
+
+    /* === 🧩 MAIN — contenu vif et flexible === */
+    .vif-main {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    /* HERO — punch visuel */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2.5rem;
+      margin-bottom: 4rem;
+      background: linear-gradient(105deg, #fff6f2 0%, #fffdfa 100%);
+      padding: 2.5rem 2.8rem;
+      border-radius: var(--vif-radius);
+      box-shadow: var(--vif-shadow);
+    }
+
+    .hero-text {
+      flex: 1 1 280px;
+    }
+
+    .hero-text h1 {
+      font-size: 2.9rem;
+      font-weight: 750;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-text h1 i {
+      color: var(--vif-primary);
+      font-style: normal;
+      background: linear-gradient(145deg, #ff4d6d, #c77dff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-description {
+      font-size: 1.25rem;
+      color: #4a4a5a;
+      margin-bottom: 2rem;
+      max-width: 550px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      background: white;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+      transition: all 0.2s ease;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--vif-text);
+    }
+
+    .btn-primary {
+      background: var(--vif-primary);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #e63e5c;
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px -8px #ff4d6d80;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--vif-border);
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--vif-primary);
+      background: #fff5f7;
+    }
+
+    .hero-visual {
+      flex: 1 1 260px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-visual .vif-card {
+      background: white;
+      padding: 1.8rem 1.8rem 2.2rem;
+      border-radius: 38px;
+      box-shadow: var(--vif-shadow);
+      transform: rotate(2deg);
+      transition: 0.25s;
+      text-align: center;
+    }
+
+    .hero-visual .vif-card:hover {
+      transform: rotate(0deg) scale(1.01);
+    }
+
+    .vif-badge {
+      background: var(--vif-soft);
+      border-radius: 100px;
+      padding: 0.5rem 1.4rem;
+      font-size: 0.9rem;
+      color: var(--vif-primary);
+      font-weight: 600;
+    }
+
+    .emoji-big {
+      font-size: 3.7rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* === SECTION CARTES FLEXIBLES — VIF grid === */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 680;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-desc {
+      color: #5a5a6e;
+      margin-bottom: 2.4rem;
+      font-size: 1.2rem;
+    }
+
+    .grid-vif {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin: 2.5rem 0 3.5rem;
+    }
+
+    .carte {
+      background: white;
+      border-radius: var(--vif-radius);
+      padding: 1.9rem 1.6rem;
+      box-shadow: var(--vif-shadow);
+      transition: all 0.25s cubic-bezier(0.03, 0.78, 0.26, 1);
+      border: 1px solid white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carte:hover {
+      border-color: var(--vif-secondary);
+      transform: translateY(-8px);
+      box-shadow: 0 26px 38px -12px rgba(255, 75, 100, 0.12);
+    }
+
+    .carte-emoji {
+      font-size: 2.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .carte h3 {
+      font-size: 1.7rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .carte p {
+      color: #4b4b5c;
+      margin-bottom: 1.8rem;
+      flex: 1;
+    }
+
+    .carte-link {
+      text-decoration: none;
+      font-weight: 620;
+      color: var(--vif-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 3px;
+      align-self: flex-start;
+      transition: 0.2s;
+    }
+
+    .carte-link:hover {
+      border-bottom-color: var(--vif-primary);
+    }
+
+    /* === INTERACTIVITÉ & TEMOIGNAGE vif === */
+    .vif-interactif {
+      background: linear-gradient(125deg, #f9f1ff 0%, #fff9ec 100%);
+      border-radius: var(--vif-radius);
+      padding: 2.6rem 2.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+      margin: 3rem 0 2rem;
+      box-shadow: var(--vif-shadow);
+    }
+
+    .vif-interactif-left {
+      flex: 2 1 260px;
+    }
+
+    .vif-interactif-left h2 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .compteur-box {
+      background: white;
+      padding: 1.5rem 1.8rem;
+      border-radius: 28px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.9rem;
+      margin-top: 1rem;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.02);
+    }
+
+    .compteur {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .compteur-nb {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(145deg, var(--vif-primary), #b38cfa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .btn-compteur {
+      background: white;
+      border: 1.5px solid #e2dde2;
+      border-radius: 60px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2d2d3a;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+
+    .btn-compteur:hover {
+      background: var(--vif-primary);
+      border-color: var(--vif-primary);
+      color: white;
+    }
+
+    .btn-compteur:active {
+      transform: scale(0.96);
+    }
+
+    .vif-interactif-right {
+      flex: 1 1 200px;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(6px);
+      padding: 1.6rem;
+      border-radius: 28px;
+      font-size: 1.1rem;
+      border: 1px solid white;
+    }
+
+    .vif-interactif-right p {
+      font-style: italic;
+      margin-bottom: 0.8rem;
+    }
+
+    .author {
+      font-weight: 700;
+      color: var(--vif-accent);
+    }
+
+    /* === FOOTER — simple et vif === */
+    .vif-footer {
+      border-top: 2px solid var(--vif-border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      color: #5e5e70;
+      background: #fffcfb;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.8rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #5e5e70;
+    }
+
+    .footer-links a:hover {
+      color: var(--vif-primary);
+    }
+
+    /* 📱 petits ajustements ultra flex */
+    @media (max-width: 600px) {
+      .vif-header {
+        flex-direction: column;
+        align-items: start;
+        gap: 0.8rem;
+      }
+      .hero {
+        padding: 1.8rem;
+      }
+      .hero-text h1 {
+        font-size: 2.2rem;
+      }
+      .vif-interactif {
+        padding: 1.8rem;
+      }
+      .compteur-nb {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+  <!-- Inter font (optionnel, mais améliore la netteté) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,520;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 🧊 HEADER vif / intuitif -->
+  <header class="vif-header">
+    <div class="logo">
+      ⚡ VIF<span>template</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#">Studio</a>
+      <a href="#">Projets</a>
+      <a href="#">Lab</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- 🧊 MAIN — coeur du template -->
+  <main class="vif-main">
+    <!-- HERO vibrant et flexible -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>
+          Créez <i>vif</i>,<br>pensez fluide.
+        </h1>
+        <p class="hero-description">
+          Un template d’une simplicité vive. HTML, CSS, JS embarqués. 
+          Aucune dépendance — votre idée prend vie immédiatement.
+        </p>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="liveToastBtn">
+            ✦ Démarrer
+          </button>
+          <button class="btn btn-outline" id="explorerBtn">
+            <span>→</span> Explorer
+          </button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="vif-card">
+          <div class="emoji-big">✨🪄</div>
+          <span class="vif-badge">flexible • vif</span>
+          <p style="margin-top: 1rem; font-weight: 500; color: #3d3d4d;">100% single‑file</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION cartes — grille adaptative -->
+    <h2 class="section-title">
+      <span>🧩</span> Des possibles, vifs
+    </h2>
+    <p class="section-desc">
+      Une base saine, modulaire — chaque carte respire.
+    </p>
+
+    <div class="grid-vif">
+      <div class="carte">
+        <div class="carte-emoji">🎨</div>
+        <h3>Palette</h3>
+        <p>Dégradés, couleurs franches et ombres légères. Personnalisez en un clin.</p>
+        <a href="#" class="carte-link">Explorer la palette →</a>
+      </div>
+      <div class="carte">
+        <div class="carte-emoji">📐</div>
+        <h3>Flex grid</h3>
+        <p>Auto‑fit, minmax, responsive sans media‑query lourdes. Élastique et fiable.</p>
+        <a href="#" class="carte-link">Voir la grille →</a>
+      </div>
+      <div class="carte">
+        <div class="carte-emoji">⚡</div>
+        <h3>Vif JS</h3>
+        <p>Compteur interactif, micro‑interactions, sans framework. Prêt à greffer.</p>
+        <a href="#" class="carte-link">Interagir ↓</a>
+      </div>
+    </div>
+
+    <!-- Zone INTERACTIVE + compteur → JS embarqué VIF -->
+    <section class="vif-interactif" id="interactive-zone">
+      <div class="vif-interactif-left">
+        <h2>✨ Compteur VIF</h2>
+        <p style="margin-bottom: 0.5rem; color: #4b4b5a;">Cliquez, ça compte — interactivité réactive.</p>
+        <div class="compteur-box">
+          <span style="font-weight: 600; color: #3d3d55;">vous avez cliqué</span>
+          <div class="compteur">
+            <span class="compteur-nb" id="compteurVif">0</span>
+            <button class="btn-compteur" id="btnIncrement">
+              <span>+1</span> 
+            </button>
+            <button class="btn-compteur" id="btnReset">
+              ↻ remettre à zéro
+            </button>
+          </div>
+          <small style="color: #8f8fa3;">vif signifie aussi volatile… mais pas les clics ✨</small>
+        </div>
+      </div>
+      <div class="vif-interactif-right">
+        <p>“ J’ai déposé ce template et en 5 minutes le site était en ligne, vif et coloré. ”</p>
+        <span class="author">— Lina D., creative dev</span>
+        <div style="margin-top: 1.2rem; display: flex; gap: 6px;">
+          <span style="background: #ffb6c1; padding: 5px 12px; border-radius: 60px;">💬 vif</span>
+          <span style="background: #e3d7ff; padding: 5px 12px; border-radius: 60px;">🕸️ flexible</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- petit message de bienveillance JS (lancé via le bouton Démarrer) -->
+    <div style="display: none;" id="toastMessage">✨ VIF — votre idée prend vie, maintenant.</div>
+  </main>
+
+  <!-- FOOTER simple, vif -->
+  <footer class="vif-footer">
+    <span>⚡ VIF template — un fichier, zéro build</span>
+    <div class="footer-links">
+      <a href="#">Mastodon</a>
+      <a href="#">GitHub</a>
+      <a href="#">Instagram</a>
+    </div>
+  </footer>
+
+  <!-- 🤖 JAVASCRIPT — tout est sur cette page, vif et sans friction -->
+  <script>
+    (function() {
+      "use strict";
+
+      // --- COMPTEUR VIF (interaction immédiate)
+      const compteurElement = document.getElementById('compteurVif');
+      const btnIncrement = document.getElementById('btnIncrement');
+      const btnReset = document.getElementById('btnReset');
+      let compteur = 0;
+
+      function updateCompteur() {
+        if (compteurElement) {
+          compteurElement.textContent = compteur;
+        }
+      }
+
+      if (btnIncrement) {
+        btnIncrement.addEventListener('click', function (e) {
+          e.preventDefault();
+          compteur += 1;
+          updateCompteur();
+        });
+      }
+
+      if (btnReset) {
+        btnReset.addEventListener('click', function (e) {
+          e.preventDefault();
+          compteur = 0;
+          updateCompteur();
+        });
+      }
+
+      // --- BOUTON "Démarrer" → feedback toast-like (élégant, pas de console)
+      const startBtn = document.getElementById('liveToastBtn');
+      if (startBtn) {
+        startBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // création d'un indicateur éphémère "toast"
+          const toast = document.createElement('div');
+          toast.textContent = '⚡ Vif · prêt !';
+          toast.style.position = 'fixed';
+          toast.style.bottom = '28px';
+          toast.style.left = '50%';
+          toast.style.transform = 'translateX(-50%)';
+          toast.style.background = 'var(--vif-primary, #ff4d6d)';
+          toast.style.color = 'white';
+          toast.style.padding = '0.9rem 2.2rem';
+          toast.style.borderRadius = '50px';
+          toast.style.fontWeight = '600';
+          toast.style.boxShadow = '0 16px 28px -8px rgba(255,77,109,0.5)';
+          toast.style.zIndex = '9999';
+          toast.style.backdropFilter = 'blur(4px)';
+          toast.style.border = '1px solid rgba(255,255,255,0.3)';
+          toast.style.letterSpacing = '0.3px';
+          document.body.appendChild(toast);
+
+          // animation disparition
+          setTimeout(() => {
+            toast.style.transition = 'opacity 0.5s ease, transform 0.3s';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(16px)';
+            setTimeout(() => {
+              if (toast.parentNode) document.body.removeChild(toast);
+            }, 550);
+          }, 2100);
+        });
+      }
+
+      // --- BOUTON "Explorer" (amène en douceur vers la zone interactive)
+      const explorerBtn = document.getElementById('explorerBtn');
+      if (explorerBtn) {
+        explorerBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const zone = document.getElementById('interactive-zone');
+          if (zone) {
+            zone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // petit highlight temporaire
+            zone.style.transition = 'background 0.5s';
+            zone.style.background = '#fff3df';
+            setTimeout(() => {
+              zone.style.background = ''; // revient au dégradé d'origine (linéaire)
+            }, 700);
+          }
+        });
+      }
+
+      // petite micro‑interaction supplémentaire — cartes : alert('bientôt')
+      const cartesLinks = document.querySelectorAll('.carte-link');
+      cartesLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault(); // template, pas de navigation réelle
+          // feedback très léger (changer la flèche)
+          const arrow = this.querySelector('span') || this;
+          this.style.opacity = '0.8';
+          setTimeout(() => { this.style.opacity = '1'; }, 150);
+        });
+      });
+
+    })();
+  </script>
+
+  <!-- petite micro-commande style: tout est déjà intégré -->
+  <!-- Pas de fichier externe, tout est là, vif et prêt. -->
+</body>
+</html>
