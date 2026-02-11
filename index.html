@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Le Soir · Coline</title>
+  <title>Bordeaux Actu · Coline</title>
   <style>
-    /* ========== STYLE JOURNAL MINIMALISTE ========== */
+    /* ========== STYLE 100% MÉDIA LOCAL – AUCUNE ROMANCE ========== */
     * {
       margin: 0;
       padding: 0;
@@ -13,8 +13,8 @@
     }
 
     body {
-      background-color: #f6f4f0;
-      font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, Times, serif;
+      background-color: #f3f3f3;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
       padding: 0;
       margin: 0;
       display: flex;
@@ -22,220 +22,243 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      transition: background-color 0.5s ease;
+      transition: background 0.8s ease;
     }
 
+    /* MODE ROMANTIQUE – DÉCLENCHÉ APRÈS CLIC */
     body.love-mode {
-      background: #fdeded;
+      background: linear-gradient(145deg, #ffd9e2, #ffe4e9);
     }
 
-    .journal {
+    body.love-mode .site {
+      background: rgba(255, 250, 245, 0.98);
+      box-shadow: 0 0 50px rgba(255, 80, 120, 0.3);
+      border-color: #ffb7c5;
+    }
+
+    .site {
       max-width: 100%;
       width: 100%;
-      background: #fefcf8;
+      background: white;
       box-shadow: 0 0 20px rgba(0,0,0,0.02);
       border: none;
       position: relative;
+      transition: all 0.5s;
     }
 
-    /* BANDEAU HAUT */
-    .journal-header {
-      border-bottom: 1.5px solid #1e1e1e;
-      padding: 1.2rem 1.2rem 0.6rem;
+    /* ========== BANDEAU MÉDIA LOCAL ========== */
+    .top-bar {
+      background: #1a2a4e;
+      color: white;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .header-media {
+      padding: 1.2rem 1.2rem 0.8rem;
+      border-bottom: 3px solid #e00909;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background: white;
     }
 
-    .journal-date {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #5e5e5e;
-      font-family: 'Inter', Arial, sans-serif;
-      margin-bottom: 0.3rem;
-    }
-
-    .journal-title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      font-family: 'Cormorant Garamond', serif;
-      letter-spacing: -0.5px;
-      color: #0c0c0c;
+    .media-name {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      font-family: 'Inter', sans-serif;
+      color: #0a1a2a;
       line-height: 1;
     }
 
-    .journal-sub {
+    .media-slogan {
       font-size: 0.65rem;
-      color: #5e5e5e;
-      text-transform: uppercase;
-      margin-top: 0.2rem;
-    }
-
-    /* UNE PRINCIPALE */
-    .une {
-      padding: 1.8rem 1.5rem;
-      border-bottom: 1px solid #dad7d0;
-    }
-
-    .kicker {
-      font-size: 0.65rem;
+      color: #5a5a5a;
       text-transform: uppercase;
       letter-spacing: 3px;
-      color: #9e3c3c;
-      font-family: 'Inter', sans-serif;
-      margin-bottom: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    /* MENU FAUX */
+    .menu-fake {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.6rem 0.5rem;
+      background: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.7rem;
       font-weight: 600;
+      color: #2a2a2a;
+      text-transform: uppercase;
+    }
+
+    /* ========== ARTICLE NEUTRE – AUCUN SIGNE ROMANTIQUE ========== */
+    .article {
+      padding: 1.8rem 1.5rem;
+      background: white;
+    }
+
+    .rubrique {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: #e00909;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
     }
 
     h1 {
-      font-size: 2.1rem;
+      font-size: 2.2rem;
       font-weight: 700;
       line-height: 1.1;
-      margin-bottom: 0.6rem;
-      font-family: 'Cormorant Garamond', serif;
-      color: #0c0c0c;
+      margin-bottom: 0.8rem;
+      font-family: 'Inter', sans-serif;
+      color: #0a0a0a;
     }
 
-    .subhead {
-      font-size: 0.95rem;
-      font-style: italic;
-      color: #3e3e3e;
+    .chapo {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #3a3a3a;
       margin-bottom: 1.2rem;
-      border-left: 3px solid #9e3c3c;
+      border-left: 4px solid #e00909;
       padding-left: 1rem;
     }
 
-    .article-meta {
-      font-size: 0.7rem;
-      color: #6b6b6b;
-      font-family: 'Inter', sans-serif;
+    .auteur {
+      font-size: 0.75rem;
+      color: #6a6a6a;
       margin-bottom: 1.5rem;
-      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .fausse-photo {
-      background: #e9e2d9;
-      padding: 1.5rem 0.5rem;
-      text-align: center;
-      font-size: 2.8rem;
-      letter-spacing: 6px;
-      color: #4a4238;
-      margin: 1rem 0;
-      border-radius: 4px;
-    }
-
-    .chapeau {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 1.5rem 0 0.8rem;
-      color: #1e1e1e;
+      background: #e6eef5;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #3a5a7a;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
     }
 
     p {
       font-size: 0.95rem;
-      line-height: 1.5;
+      line-height: 1.6;
       color: #2a2a2a;
       margin-bottom: 1rem;
-      font-family: 'Cormorant Garamond', serif;
     }
 
-    .secret-link {
-      background: #efebe6;
-      padding: 1.2rem;
-      text-align: center;
-      margin: 1.8rem 0 0.2rem;
-      border-radius: 32px;
-      border: 1px dashed #9e3c3c;
-    }
-
-    .btn-journal {
-      background: transparent;
-      border: 1.5px solid #9e3c3c;
-      padding: 0.9rem 2rem;
-      border-radius: 50px;
-      font-size: 0.95rem;
+    /* ========== BOUTON RÉVÉLATEUR – STYLE BOUTON "VOIR PLUS" ========== */
+    .btn-revelateur {
+      background: #f0f0f0;
+      border: 1px solid #c0c0c0;
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1rem;
       font-weight: 600;
-      color: #9e3c3c;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      color: #1e1e1e;
       width: 100%;
       font-family: 'Inter', sans-serif;
-      transition: 0.2s;
       cursor: pointer;
+      transition: 0.2s;
+      margin: 1.2rem 0 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .btn-journal:hover {
-      background: #9e3c3c;
-      color: white;
+    .btn-revelateur:active {
+      background: #e0e0e0;
     }
 
-    /* DOSSIER SECRET */
-    .dossier-secret {
-      padding: 1.8rem 1.5rem;
-      background: #f9f7f4;
-      border-top: 1px solid #d6d0c8;
-    }
-
-    .section {
-      padding: 2rem 1.5rem;
-      border-top: 1px solid #ddd8d0;
-    }
-
+    /* ========== ÉLÉMENTS CACHÉS AU DÉBUT ========== */
     .hidden {
       display: none !important;
     }
 
-    /* MINI-JEU */
-    .jeu-container {
-      background: #f2ede7;
-      padding: 2rem 1.2rem;
-      border-radius: 24px;
-      margin-top: 1.2rem;
+    /* ========== MODE ROMANTIQUE – APPARITION APRÈS CLIC ========== */
+    .love-zone {
+      opacity: 0;
+      transition: opacity 0.6s;
     }
 
-    .cible {
-      background: #c44;
-      width: 85px;
-      height: 85px;
-      border-radius: 50%;
+    body.love-mode .love-zone {
+      opacity: 1;
+    }
+
+    /* MINI-JEU REPENSÉ POUR MOBILE – "TROUVE LE MESSAGE" */
+    .jeu-container {
+      background: #fff0f3;
+      border-radius: 36px;
+      padding: 2rem 1.5rem;
+      margin: 1.8rem 0;
+      border: 2px solid #ffb6c1;
+      box-shadow: 0 8px 0 #d48c8c;
+    }
+
+    .grille-mobile {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .carte-jeu {
+      background: #ffdae0;
+      aspect-ratio: 1 / 1;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2.2rem;
-      color: white;
-      margin: 1.5rem auto;
-      box-shadow: 0 10px 0 #7a2a2a;
+      box-shadow: 0 6px 0 #c47a7a;
       transition: 0.05s;
       cursor: pointer;
-      user-select: none;
+      font-weight: bold;
     }
 
-    .cible:active {
-      transform: translateY(8px);
-      box-shadow: 0 4px 0 #7a2a2a;
+    .carte-jeu:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #c47a7a;
     }
 
-    /* PROPOSITION */
+    .carte-jeu.retournee {
+      background: #ffb6c1;
+      color: white;
+    }
+
+    /* PROPOSITION ROMANTIQUE */
     .love-card {
-      background: #fffbf9;
-      border: 2px solid #f1c0c0;
-      padding: 2rem 1.5rem;
-      border-radius: 32px;
+      background: white;
+      border: 4px solid #ff8a9c;
+      padding: 2rem 1.8rem;
+      border-radius: 48px;
       text-align: center;
+      margin: 2rem 0;
+      box-shadow: 0 15px 0 #b85a5a;
     }
 
     .btn-oui {
-      background: #d65959;
+      background: #ff4d6d;
       color: white;
       border: none;
-      padding: 1.2rem 2.5rem;
-      font-size: 1.7rem;
-      border-radius: 80px;
-      font-weight: 700;
-      box-shadow: 0 10px 0 #9e4040;
+      padding: 1.3rem 2.5rem;
+      font-size: 1.8rem;
+      border-radius: 100px;
+      font-weight: 800;
+      box-shadow: 0 12px 0 #b33a4a;
       width: 100%;
-      margin: 1rem 0;
+      margin: 1.2rem 0;
     }
 
     .btn-non {
@@ -244,327 +267,441 @@
       border: none;
       padding: 0.9rem 1.8rem;
       border-radius: 60px;
-      font-size: 1.1rem;
-      box-shadow: 0 7px 0 #8f8f8f;
+      font-size: 1.2rem;
+      box-shadow: 0 8px 0 #8f8f8f;
     }
 
     /* CONTRAT */
     .contrat {
       background: #fffcf0;
-      border: 4px double #b87c7c;
-      padding: 1.8rem;
+      border: 6px double #d46b6b;
+      padding: 2rem 1.5rem;
+      border-radius: 32px;
       font-family: 'Courier New', monospace;
-      border-radius: 20px;
+      margin: 2rem 0;
     }
 
     .btn-signature {
       background: #f0b27a;
       color: #1e1e1e;
-      font-size: 1.4rem;
-      padding: 1.1rem;
+      font-size: 1.5rem;
+      padding: 1.2rem;
       border-radius: 100px;
       border: none;
       font-weight: bold;
-      box-shadow: 0 10px 0 #aa7a4a;
+      box-shadow: 0 12px 0 #aa7a4a;
       width: 100%;
-      margin-top: 1.5rem;
     }
 
-    /* TÉLÉPHONE */
-    @media (min-width: 480px) {
-      .journal {
-        max-width: 440px;
-        margin: 0 auto;
-      }
-    }
-
-    .footer-journal {
-      padding: 1.5rem;
-      text-align: center;
-      border-top: 1px solid #d6d0c8;
-      font-size: 0.65rem;
-      color: #777;
-      text-transform: uppercase;
-    }
-
-    .micro-info {
+    /* ========== POP-UP CACA ========== */
+    .popup-caca {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
       display: flex;
-      justify-content: space-between;
-      padding: 0.6rem 1.5rem;
-      font-size: 0.55rem;
-      color: #6e6e6e;
-      border-bottom: 1px dotted #ccc;
-      font-family: 'Inter', sans-serif;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      backdrop-filter: blur(5px);
     }
 
-    .message-perso {
-      background: #fcf8f0;
+    .popup-content {
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 48px;
+      max-width: 90%;
+      width: 400px;
+      text-align: center;
+      border: 6px solid #ffb347;
+      animation: pop 0.3s;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-content h3 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #2d2d2d;
+    }
+
+    .btn-caca {
+      background: #a55d5d;
+      color: white;
+      border: none;
+      padding: 1.2rem 2rem;
+      border-radius: 60px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0.8rem;
+      box-shadow: 0 8px 0 #5e3a3a;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .btn-caca.oui {
+      background: #b03e3e;
+    }
+
+    .btn-caca.non {
+      background: #4a7a6e;
+      box-shadow: 0 8px 0 #2e4f46;
+    }
+
+    .btn-caca:active {
+      transform: translateY(8px);
+      box-shadow: 0 2px 0 #5e3a3a;
+    }
+
+    .reaction-caca {
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
       padding: 1.2rem;
-      border-radius: 20px;
-      margin-top: 1.2rem;
-      font-style: italic;
-      border-left: 4px solid #b03e3e;
+      border-radius: 40px;
+      background: #fff3e0;
+    }
+
+    /* CŒURS FLOTTANTS */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+
+    body.love-mode .floating-hearts {
+      opacity: 0.5;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      animation: float 8s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(15deg); }
+    }
+
+    @media (min-width: 480px) {
+      .site { max-width: 450px; margin: 0 auto; }
     }
   </style>
-  <!-- FONTS -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="journal" id="journal">
-    <!-- MICRO INFOS -->
-    <div class="micro-info">
-      <span>📰 ÉDITION BORDEAUX</span>
-      <span>⭐ UNE SEULE</span>
-      <span>2,50€</span>
+  <!-- CŒURS FLOTTANTS DISCRETS (APPAIRONT APRÈS MODE LOVE) -->
+  <div class="floating-hearts" id="hearts"></div>
+
+  <!-- POP-UP CACA (CACHÉE AU DÉPART) -->
+  <div id="popupCaca" class="popup-caca hidden">
+    <div class="popup-content">
+      <h3>🤔 Kélyann est-il un gros caca ?</h3>
+      <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+        <button id="cacaOui" class="btn-caca oui">💩 OUI</button>
+        <button id="cacaNon" class="btn-caca non">❌ NON</button>
+      </div>
+      <div id="reactionCaca" class="reaction-caca hidden"></div>
+    </div>
+  </div>
+
+  <div class="site">
+    <!-- TOP BAR MÉDIA LOCAL -->
+    <div class="top-bar">
+      <span>🔴 BORDEAUX MÉTROPOLE</span>
+      <span>16°C • Plutôt nuageux</span>
     </div>
 
-    <!-- HEADER JOURNAL -->
-    <div class="journal-header">
-      <div class="journal-date">MARDI 16 FÉVRIER 2026</div>
-      <div class="journal-title">LE SOIR</div>
-      <div class="journal-sub">QUOTIDIEN INDÉPENDANT • 142e ANNÉE</div>
+    <!-- EN-TÊTE JOURNAL -->
+    <div class="header-media">
+      <div class="media-name">BORDEAUX ACTU</div>
+      <div class="media-slogan">L'INFO LOCALE EN CONTINU</div>
     </div>
 
-    <!-- === PAGE 1 : UNE SANS AUCUNE INFOS PERSONNELLES === -->
+    <!-- FAUX MENU -->
+    <div class="menu-fake">
+      <span>POLITIQUE</span>
+      <span>ÉCONOMIE</span>
+      <span>SPORT</span>
+      <span>‍🎨 CULTURE</span>
+    </div>
+
+    <!-- ========== PAGE 1 – 100% NEUTRE, AUCUNE DÉCLARATION ========== -->
     <div id="page1">
-      <div class="une">
-        <span class="kicker">🎨 LA RENCONTRE</span>
-        <h1>Coline,<br>celle qui a tout changé</h1>
-        <div class="subhead">
-          Il n'y a pas de prix, pas de concours. Juste une histoire que personne n'avait vue venir.
+      <div class="article">
+        <div class="rubrique">🎨 PORTRAIT</div>
+        <h1>Coline, une artiste qui monte sur la scène bordelaise</h1>
+        <div class="chapo">
+          Rencontre avec une jeune créatrice dont le travail commence à faire parler dans les ateliers de la rive droite.
         </div>
-        <div class="article-meta">
-          ✦ Par Kélyann
+        <div class="auteur">
+          <span style="background: #e0e0e0; padding: 5px 12px; border-radius: 40px;">✎ Par Rédaction</span>
+          <span>Publié le 16/02/2026</span>
         </div>
 
-        <!-- ILLUSTRATION NEUTRE -->
         <div class="fausse-photo">
-          ✦ ✦ ✦ ✦ ✦
+          🖼️ 📸
         </div>
 
-        <p class="chapeau">
-          Au début, c'était pas gagné. Nos parents, les emplois du temps, les villes pas si proches. 
-          On a dû ruser, planifier, trouver des créneaux comme des agents secrets.
+        <p>
+          Installée dans un ancien atelier du quartier Saint-Michel, Coline prépare une exposition prévue au printemps. 
+          Son travail, mêlant peinture et collage, a attiré l'attention de plusieurs galeries indépendantes.
         </p>
         <p>
-          Mais on l'a fait. On a réussi à se voir, à se parler, à se découvrir. 
-          Et aujourd'hui, je sais une chose : j'ai envie de continuer. 
-          Pendant longtemps, j'ai cherché comment te le dire sans que ce soit trop tôt ou trop maladroit.
+          « Ce que j'aime, c'est travailler avec la lumière naturelle », explique-t-elle. « Bordeaux a cette qualité de lumière qui change tout. »
         </p>
-        <p style="font-style: italic; color: #4f4f4f;">
-          « Alors j'ai fait ce journal. Juste pour toi. »
+        <p>
+          Rencontrée lors d'un atelier collectif, elle fait partie de cette nouvelle génération d'artistes qui réinventent la scène locale sans fanfare.
+        </p>
+        <p style="font-style: italic; color: #5a5a5a;">
+          Article mis à jour le 16 février 2026.
         </p>
 
-        <!-- BANDEAU SECRET -->
-        <div class="secret-link">
-          <span style="font-size: 1.8rem; display: block; margin-bottom: 8px;">📄</span>
-          <p style="font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem;">
-            SUITE DE L'ARTICLE EN PAGE CONFIDENTIELLE
-          </p>
-          <button id="btnReveler" class="btn-journal">
-            ⚡ LIRE LA SUITE
-          </button>
-          <p style="margin-top: 14px; font-size: 0.75rem; color: #9e3c3c;">
-            (Clique, c'est pour toi)
-          </p>
-        </div>
-      </div>
-
-      <!-- PETIT ENCADRÉ SANS INFO PRIVÉE -->
-      <div style="padding: 0.2rem 1.5rem 1.8rem;">
-        <div style="background: #f0ece6; padding: 1.2rem; border-radius: 16px;">
-          <span style="font-weight: 700; font-size: 0.85rem;">🔍 CE QU'ON SAIT</span>
-          <p style="margin-top: 0.5rem; font-size: 0.85rem;">
-            Juste un prénom : Coline. Et un type qui signe Kélyann, qui a l'air bien décidé à lui faire sa déclaration.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- === PAGE 2 : MINI-JEU / ÉPREUVE === -->
-    <div id="page2" class="hidden section dossier-secret">
-      <span style="font-size: 0.7rem; background: #1e1e1e; color: white; padding: 6px 14px; border-radius: 40px; letter-spacing: 1px;">🔐 PAGE RÉSERVÉE</span>
-      <h2 style="font-size: 1.9rem; margin: 1.2rem 0 0.3rem;">Manuscrit trouvé</h2>
-      <p style="font-size: 1rem;"><em>“Je pourrais te faire un long discours, mais j’ai préféré un jeu.”</em></p>
-      <p style="margin-top: 1rem;">— Kélyann, l’auteur de cette page.</p>
-      
-      <div style="margin-top: 2rem;">
-        <p style="font-weight: 700; font-size: 1.2rem;">🕹️ Attrape 7 cœurs</p>
-        <p style="margin-bottom: 0.2rem; font-size: 0.95rem;">
-          Coline, le vrai message est derrière ce petit jeu. (Il va bouger, le bougre)
-        </p>
-        
-        <div class="jeu-container">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 600;">❤️ Cœurs</span>
-            <span id="score" style="font-weight: 700; background: #222; color: white; padding: 5px 16px; border-radius: 40px;">0/7</span>
-          </div>
-          <div id="cible" class="cible">❤️</div>
-          <p id="jeuMessage" style="text-align: center; margin-top: 1.2rem; font-size: 1rem;">
-            Clique sur le cœur. Il est un peu fuyard.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- === PAGE 3 : PROPOSITION === -->
-    <div id="page3" class="hidden section love-card">
-      <span style="font-size: 4.2rem;">💌</span>
-      <h1 style="font-size: 2.4rem; margin-top: 0.5rem; color: #b04545;">Coline…</h1>
-      <p style="font-size: 1.3rem; margin: 1rem 0; font-weight: 600;">T’as gagné le droit de lire la suite.</p>
-      <p style="font-size: 1.2rem;">(Mais tu l’avais déjà, de toute façon)</p>
-      
-      <div style="margin: 2rem 0 1.5rem;">
-        <p style="font-size: 1.9rem; font-weight: 700; background: #ffe7e7; padding: 0.8rem; border-radius: 60px;">
-          Tu veux être ma Valentine ?
-        </p>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <button id="ouiLove" class="btn-oui">
-          ❤️ OUI ❤️
+        <!-- BOUTON 100% NEUTRE -->
+        <button id="btnRevelateur" class="btn-revelateur">
+          <span>🔒 Article réservé aux abonnés</span>
+          <span style="background: #1a2a4e; color: white; padding: 6px 16px; border-radius: 40px;">Révéler la suite →</span>
         </button>
-        <div style="position: relative; width: 100%; display: flex; justify-content: center;">
-          <button id="nonLove" class="btn-non">
-            😤 Non
-          </button>
-          <div id="nonWarning" class="hidden" style="position: absolute; bottom: 110%; background: #1a1a1a; color: white; padding: 10px 18px; border-radius: 50px; white-space: nowrap; font-size: 0.8rem;">
-            🚫 Pas possible, désolé. (c'est Kélyann qui contrôle)
+        <p style="font-size: 0.7rem; color: #999; text-align: center; margin-top: 0.5rem;">
+          Abonnez-vous pour découvrir la suite de cet article
+        </p>
+      </div>
+
+      <!-- FAKE COMMENTAIRES -->
+      <div style="padding: 1.5rem; border-top: 1px solid #eee;">
+        <p style="font-weight: 600; margin-bottom: 1rem;">1 commentaire</p>
+        <div style="display: flex; gap: 12px;">
+          <span style="background: #d0d0d0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">👤</span>
+          <div>
+            <span style="font-weight: 600;">Jean_M</span>
+            <p style="font-size: 0.8rem;">Hâte de voir l'exposition !</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- === PAGE 4 : CONTRAT === -->
-    <div id="page4" class="hidden section">
-      <div class="contrat">
-        <h2 style="text-align: center; font-size: 1.9rem;">📜 CONTRAT</h2>
-        <p style="text-align: center; margin-bottom: 1.8rem; font-size: 0.95rem;">Entre Kélyann et Coline</p>
-        
-        <p style="margin-top: 1.2rem;">1️⃣ Coline accepte d’être la Valentine de Kélyann. (Plus qu’à cocher la case)</p>
-        <p style="margin-top: 1rem;">2️⃣ Le 16 février, j’ai trop hâte de te voir et de te faire plein de câlins. (vraiment beaucoup)</p>
-        <p style="margin-top: 1rem;">3️⃣ Au début c’était pas gagné avec nos parents, les planning, tout ça… mais on a réussi à planifier cette rencontre. Et franchement, j’en suis hyper fier.</p>
-        <p style="margin-top: 1rem;">4️⃣ Ce contrat est valable aussi longtemps qu’on voudra. (donc très très longtemps)</p>
-        
-        <div style="margin-top: 2.2rem;">
-          <p style="font-weight: 700;">Signature de Coline :</p>
-          <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 12px;">
-            <span style="border-bottom: 2px dashed #b04545; padding-bottom: 8px; width: 180px;">__________________</span>
+    <!-- ========== PAGE 2 – TOUT BASCULE ICI ========== -->
+    <div id="page2" class="hidden">
+     <div style="background: #ff4d6d; padding: 1.8rem 1.2rem; color: white; text-align: center;">
+        <span style="font-size: 3rem;">💌</span>
+        <h2 style="font-size: 2.2rem; margin-top: 0.5rem; color: white;">Coline…</h2>
+        <p style="font-size: 1.3rem;">C'est moi, Kélyann.</p>
+        <p style="font-size: 1.1rem; margin-top: 1rem;">Le fameux "article" là… c'était un prétexte.</p>
+      </div>
+
+      <!-- MINI-JEU : TROUVE LES 2 CŒURS -->
+      <div style="padding: 2rem 1.5rem;">
+        <div style="background: #fff9f7; border-radius: 40px; padding: 1.8rem; border: 2px solid #ffb6c1;">
+          <p style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">🎮 Un jeu pour toi</p>
+          <p style="margin-bottom: 1.8rem;">Derrière 2 de ces cartes, y'a un cœur. Trouve-les pour débloquer la suite ❤️</p>
+
+          <div class="grille-mobile" id="grilleJeu">
+            <div class="carte-jeu" data-coeur="true">❓</div>
+            <div class="carte-jeu" data-coeur="false">❓</div>
+            <div class="carte-jeu" data-coeur="false">❓</div>
+            <div class="carte-jeu" data-coeur="false">❓</div>
+            <div class="carte-jeu" data-coeur="true">❓</div>
+            <div class="carte-jeu" data-coeur="false">❓</div>
+          </div>
+
+          <div id="messageJeu" style="text-align: center; margin-top: 1.8rem; font-size: 1.1rem; font-weight: 600; min-height: 50px;">
+            ❤️ Trouve les 2 cœurs
+          </div>
+        </div>
+      </div>
+
+      <!-- PROPOSITION -->
+      <div id="propositionContainer" class="hidden" style="padding: 1.5rem;">
+        <div class="love-card">
+          <span style="font-size: 3.5rem;">🥺👉👈</span>
+          <h2 style="font-size: 2.2rem; margin: 1rem 0; color: #b04545;">Alors voilà.</h2>
+          <p style="font-size: 1.3rem; margin-bottom: 1.8rem;">
+            J'ai monté ce faux site juste pour toi. <br>L'article, le journal, tout.
+          </p>
+          <p style="font-size: 1.6rem; font-weight: 700; margin-bottom: 1.5rem;">
+            Coline… tu veux être ma Valentine ?
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button id="ouiLove" class="btn-oui">❤️ OUI ❤️</button>
+            <div style="position: relative; display: flex; justify-content: center;">
+              <button id="nonLove" class="btn-non">😤 Non</button>
+              <div id="nonWarning" class="hidden" style="position: absolute; bottom: 110%; background: black; color: white; padding: 10px 18px; border-radius: 50px; white-space: nowrap;">🚫 Ah non, tu peux pas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTRAT -->
+      <div id="contratContainer" class="hidden" style="padding: 1.5rem;">
+        <div class="contrat">
+          <h2 style="text-align: center; font-size: 2rem;">📜 CONTRAT</h2>
+          <p style="text-align: center; margin-bottom: 2rem;">Entre Kélyann (moi) et Coline (toi)</p>
+          <p>1️⃣ Coline accepte d'être la Valentine de Kélyann.</p>
+          <p>2️⃣ Le 16 février, j'ai trop hâte de te voir et de te faire plein de câlins.</p>
+          <p>3️⃣ Au début c'était pas gagné avec nos parents, les plannings… mais on a réussi à planifier cette rencontre.</p>
+          <p>4️⃣ Ce contrat est valable aussi longtemps que toi et moi.</p>
+          
+          <div style="margin-top: 2rem;">
+            <p style="font-weight: 700;">Signature :</p>
+            <span style="border-bottom: 3px dashed #b04545; padding-bottom: 5px; display: inline-block; width: 200px; margin-bottom: 20px;">_________________</span>
             <button id="btnSigner" class="btn-signature">
-              ✍️ SIGNER LE CONTRAT
+              ✍️ SIGNER POUR DE VRAI
             </button>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- === PAGE 5 : MERCI === -->
-    <div id="page5" class="hidden section" style="text-align: center; padding: 3rem 1.5rem;">
-      <span style="font-size: 5rem;">❤️✨</span>
-      <h1 style="font-size: 2.4rem; margin: 1.8rem 0; color: #b04545;">Merci, Coline.</h1>
-      <p style="font-size: 1.5rem; margin-bottom: 2rem;">T’as signé. Maintenant c’est officiel.</p>
-      
-      <div class="message-perso">
-        <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;">
-          J’ai trop hâte de te voir le 16.
-        </p>
-        <p style="font-size: 1.2rem;">
-          Et de te faire plein de câlins. ❤️
-        </p>
-      </div>
-      
-      <div style="margin-top: 2.5rem; font-size: 1.6rem; font-family: 'Cormorant Garamond', serif; border-top: 1px solid #ddd; padding-top: 2rem;">
-        — Kélyann
+      <!-- PAGE FINALE -->
+      <div id="pageFinale" class="hidden" style="padding: 3rem 1.5rem; text-align: center;">
+        <span style="font-size: 5rem;">❤️✨</span>
+        <h1 style="font-size: 2.6rem; margin: 2rem 0; color: #b04545;">Merci, Coline.</h1>
+        <p style="font-size: 1.6rem; margin-bottom: 2rem;">T'as signé. C'est officiel.</p>
+        <div style="background: #ffe7e7; padding: 2rem; border-radius: 48px;">
+          <p style="font-size: 1.5rem; font-weight: 700;">J'ai trop hâte de te voir le 16.</p>
+          <p style="font-size: 1.3rem; margin-top: 1rem;">Et de te faire plein de câlins. ❤️</p>
+        </div>
+        <p style="margin-top: 2.5rem; font-size: 1.4rem;">— Kélyann</p>
       </div>
     </div>
 
-    <!-- PIED DE PAGE -->
-    <div class="footer-journal">
-      LE SOIR — ÉDITION NUMÉRIQUE — NE PEUT ÊTRE VENDU
+    <!-- FOOTER NEUTRE -->
+    <div style="padding: 1.2rem; text-align: center; border-top: 1px solid #ddd; color: #777; font-size: 0.65rem;">
+      BORDEAUX ACTU • Tous droits réservés • 2026
     </div>
   </div>
 
   <script>
-    (function(){
-      // ========== AUCUNE DONNÉE PERSONNELLE STOCKÉE, JUSTE DU FUN ==========
+    (function() {
+      // ========== INIT ==========
+      const body = document.body;
       const page1 = document.getElementById('page1');
       const page2 = document.getElementById('page2');
-      const page3 = document.getElementById('page3');
-      const page4 = document.getElementById('page4');
-      const page5 = document.getElementById('page5');
-      const btnReveler = document.getElementById('btnReveler');
-      const body = document.body;
+      const btnRevelateur = document.getElementById('btnRevelateur');
+      const heartsContainer = document.getElementById('hearts');
+      const popupCaca = document.getElementById('popupCaca');
+      const cacaOui = document.getElementById('cacaOui');
+      const cacaNon = document.getElementById('cacaNon');
+      const reactionCaca = document.getElementById('reactionCaca');
 
-      // --- JEU ---
-      let score = 0;
-      const scoreSpan = document.getElementById('score');
-      const cible = document.getElementById('cible');
-      const jeuMessage = document.getElementById('jeuMessage');
+      // Création des cœurs flottants
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('span');
+        heart.className = 'heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.top = Math.random() * 100 + '%';
+        heart.style.animationDelay = Math.random() * 5 + 's';
+        heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+        heart.style.opacity = '0.3';
+        heartsContainer.appendChild(heart);
+      }
 
-      // --- PROPOSITION ---
-      const ouiLove = document.getElementById('ouiLove');
-      const nonLove = document.getElementById('nonLove');
-      const nonWarning = document.getElementById('nonWarning');
-
-      // --- CONTRAT ---
-      const btnSigner = document.getElementById('btnSigner');
-
-      // ========== 1. RÉVÉLER LE DOSSIER ==========
-      btnReveler.addEventListener('click', function() {
+      // ========== BASCULE TOTALE AU CLIC ==========
+      btnRevelateur.addEventListener('click', function() {
         body.classList.add('love-mode');
         page1.classList.add('hidden');
         page2.classList.remove('hidden');
-        if(jeuMessage) jeuMessage.textContent = 'Clique sur le cœur. Il est un peu fuyard.';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.querySelectorAll('.heart').forEach(h => h.style.opacity = '0.7');
+        
+        // POP-UP CACA APPARAÎT 1 SECONDE APRÈS
+        setTimeout(() => {
+          popupCaca.classList.remove('hidden');
+        }, 1000);
       });
 
-      // ========== 2. MINI-JEU : 7 CŒURS ==========
-      function deplacerCible() {
-        if (!cible) return;
-        const container = document.querySelector('.jeu-container');
-        if (!container) return;
-        const maxX = container.clientWidth - cible.clientWidth - 15;
-        const maxY = container.clientHeight - cible.clientHeight - 15;
-        let x = Math.max(5, Math.min(maxX, Math.random() * maxX));
-        let y = Math.max(5, Math.min(maxY, Math.random() * maxY));
-        cible.style.position = 'relative';
-        cible.style.left = x + 'px';
-        cible.style.top = y + 'px';
-      }
+      // ========== POP-UP CACA ==========
+      cacaOui.addEventListener('click', function() {
+        reactionCaca.classList.remove('hidden');
+        reactionCaca.innerHTML = '😤 Hé oh ! Bon… un peu, oui. Mais t’as quand même signé hein ! <br><span style="font-size:2rem;">💩❤️</span>';
+        // Animation Kélyann énervé
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          popupCaca.classList.add('hidden');
+          reactionCaca.classList.add('hidden');
+        }, 2500);
+      });
 
-      if (cible) {
-        cible.addEventListener('click', function(e) {
-          if (score < 7) {
-            score++;
-            scoreSpan.textContent = score + '/7';
-            if (score === 7) {
-              jeuMessage.textContent = '🎉 BRAVO ! Voilà la vraie page.';
-              cible.style.display = 'none';
-              setTimeout(() => {
-                page2.classList.add('hidden');
-                page3.classList.remove('hidden');
-              }, 1100);
+      cacaNon.addEventListener('click', function() {
+        reactionCaca.classList.remove('hidden');
+        reactionCaca.innerHTML = '😊 Mdr merci c’est gentil. Good girl que t’es ! <br><span style="font-size:2rem;">✨👼💖</span>';
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          popupCaca.classList.add('hidden');
+          reactionCaca.classList.add('hidden');
+        }, 2500);
+      });
+
+      // ========== MINI-JEU : TROUVE LES 2 CŒURS ==========
+      const cartes = document.querySelectorAll('.carte-jeu');
+      const messageJeu = document.getElementById('messageJeu');
+      let coeursTrouves = 0;
+      const propositionContainer = document.getElementById('propositionContainer');
+
+      cartes.forEach(carte => {
+        carte.addEventListener('click', function() {
+          if (this.classList.contains('retournee')) return;
+          
+          const aCoeur = this.dataset.coeur === 'true';
+          
+          if (aCoeur) {
+            this.textContent = '❤️';
+            this.classList.add('retournee');
+            coeursTrouves++;
+            
+            if (coeursTrouves === 2) {
+              messageJeu.textContent = '🎉 BRAVO ! Tu as trouvé tous les cœurs !';
+              messageJeu.style.color = '#d44';
+              propositionContainer.classList.remove('hidden');
+              for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                  let h = document.createElement('span');
+                  h.innerHTML = '❤️';
+                  h.style.position = 'fixed';
+                  h.style.left = Math.random() * 100 + '%';
+                  h.style.top = Math.random() * 100 + '%';
+                  h.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                  h.style.pointerEvents = 'none';
+                  h.style.zIndex = 9999;
+                  h.style.transition = '0.8s';
+                  document.body.appendChild(h);
+                  setTimeout(() => h.remove(), 800);
+                }, i * 40);
+              }
             } else {
-              jeuMessage.textContent = '❤️ Encore ' + (7 - score) + ' cœur(s) !';
-              deplacerCible();
+              messageJeu.textContent = '❤️ 1 cœur trouvé ! Encore 1 !';
             }
+          } else {
+            this.textContent = '❌';
+            this.classList.add('retournee');
+            this.style.background = '#e0a5a5';
+            messageJeu.textContent = '😢 Pas de cœur ici... continue !';
           }
         });
+      });
 
-        cible.addEventListener('mouseenter', function() {
-          if (score < 7) {
-            deplacerCible();
-          }
-        });
-      }
-
-      // ========== 3. BOUTON NON ==========
+      // ========== BOUTON NON QUI FUIT ==========
+      const nonLove = document.getElementById('nonLove');
+      const nonWarning = document.getElementById('nonWarning');
+      
       if (nonLove) {
         nonLove.addEventListener('click', function(e) {
           e.preventDefault();
           nonWarning.classList.remove('hidden');
           nonLove.style.transform = 'translateX(' + (Math.random() * 80 - 40) + 'px) translateY(' + (Math.random() * 40 - 20) + 'px)';
-          nonLove.style.transition = '0.1s';
-          setTimeout(() => nonWarning.classList.add('hidden'), 1100);
+          setTimeout(() => nonWarning.classList.add('hidden'), 1200);
         });
 
         nonLove.addEventListener('mouseenter', function() {
@@ -572,53 +709,51 @@
         });
       }
 
-      // ========== 4. OUI = CONTRAT ==========
-      if (ouiLove) {
-        ouiLove.addEventListener('click', function() {
-          page3.classList.add('hidden');
-          page4.classList.remove('hidden');
-          // petites étoiles
-          for (let i=0;i<16;i++) {
-            setTimeout(() => {
-              let h = document.createElement('span');
-              h.innerHTML = '❤️';
-              h.style.position = 'fixed';
-              h.style.left = Math.random()*100+'%';
-              h.style.top = Math.random()*100+'%';
-              h.style.fontSize = (Math.random()*25+18)+'px';
-              h.style.pointerEvents = 'none';
-              h.style.zIndex = 9999;
-              h.style.opacity = '0.7';
-              h.style.transition = '0.9s';
-              document.body.appendChild(h);
-              setTimeout(() => h.remove(), 800);
-            }, i*12);
-          }
-        });
-      }
+      // ========== OUI = CONTRAT ==========
+      const ouiLove = document.getElementById('ouiLove');
+      const contratContainer = document.getElementById('contratContainer');
+      
+      ouiLove.addEventListener('click', function() {
+        propositionContainer.classList.add('hidden');
+        contratContainer.classList.remove('hidden');
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            let h = document.createElement('span');
+            h.innerHTML = '❤️';
+            h.style.position = 'fixed';
+            h.style.left = Math.random() * 100 + '%';
+            h.style.top = Math.random() * 100 + '%';
+            h.style.fontSize = (Math.random() * 30 + 20) + 'px';
+            h.style.pointerEvents = 'none';
+            h.style.zIndex = 9999;
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 900);
+          }, i * 30);
+        }
+      });
 
-      // ========== 5. SIGNATURE ==========
-      if (btnSigner) {
-        btnSigner.addEventListener('click', function() {
-          page4.classList.add('hidden');
-          page5.classList.remove('hidden');
-          for (let i=0;i<30;i++) {
-            setTimeout(() => {
-              let h = document.createElement('span');
-              h.innerHTML = ['❤️','🧡','💛','💚','💙','💜','✨','💫'][Math.floor(Math.random()*8)];
-              h.style.position = 'fixed';
-              h.style.left = Math.random()*100+'%';
-              h.style.top = Math.random()*100+'%';
-              h.style.fontSize = (Math.random()*28+18)+'px';
-              h.style.pointerEvents = 'none';
-              h.style.zIndex = 9999;
-              h.style.transition = '1.4s';
-              document.body.appendChild(h);
-              setTimeout(() => h.remove(), 1400);
-            }, i*18);
-          }
-        });
-      }
+      // ========== SIGNATURE = PAGE FINALE ==========
+      const btnSigner = document.getElementById('btnSigner');
+      const pageFinale = document.getElementById('pageFinale');
+      
+      btnSigner.addEventListener('click', function() {
+        contratContainer.classList.add('hidden');
+        pageFinale.classList.remove('hidden');
+        for (let i = 0; i < 40; i++) {
+          setTimeout(() => {
+            let h = document.createElement('span');
+            h.innerHTML = ['❤️','🧡','💛','💚','💙','💜','✨','💖'][Math.floor(Math.random() * 8)];
+            h.style.position = 'fixed';
+            h.style.left = Math.random() * 100 + '%';
+            h.style.top = Math.random() * 100 + '%';
+            h.style.fontSize = (Math.random() * 35 + 20) + 'px';
+            h.style.pointerEvents = 'none';
+            h.style.zIndex = 9999;
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1400);
+          }, i * 25);
+        }
+      });
     })();
   </script>
 </body>
