@@ -2,10 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🔒 Dossier confidentiel – Coline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Le Soir · Coline</title>
   <style>
-    /* ========== STYLE GÉNÉRAL ========== */
+    /* ========== STYLE JOURNAL MINIMALISTE ========== */
     * {
       margin: 0;
       padding: 0;
@@ -13,504 +13,612 @@
     }
 
     body {
-      background: linear-gradient(145deg, #1a1e2c 0%, #2d3349 100%);
-      font-family: 'Segoe UI', 'Comic Neue', 'Quicksand', sans-serif;
-      min-height: 100vh;
+      background-color: #f6f4f0;
+      font-family: 'Cormorant Garamond', 'Times New Roman', Georgia, Times, serif;
+      padding: 0;
+      margin: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-      transition: background 0.8s;
+      justify-content: flex-start;
+      min-height: 100vh;
+      transition: background-color 0.5s ease;
     }
 
     body.love-mode {
-      background: linear-gradient(145deg, #ffdde1 0%, #ffb6c1 100%);
+      background: #fdeded;
     }
 
-    .dossier {
-      background: rgba(10, 15, 30, 0.9);
-      backdrop-filter: blur(8px);
-      border-radius: 40px;
-      padding: 40px 30px;
-      max-width: 750px;
+    .journal {
+      max-width: 100%;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      border: 2px solid #4a5c6e;
-      color: #eee;
-      position: relative;
-      z-index: 20;
-      transition: all 0.5s;
-    }
-
-    body.love-mode .dossier {
-      background: rgba(255, 245, 240, 0.95);
-      color: #2d2d2d;
-      border: 3px solid #ff9a9e;
-      box-shadow: 0 20px 60px rgba(255, 80, 100, 0.5);
-    }
-
-    h1, h2 {
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    .confidentiel {
-      border: 2px dashed #ff6b6b;
-      padding: 20px;
-      border-radius: 30px;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .btn {
+      background: #fefcf8;
+      box-shadow: 0 0 20px rgba(0,0,0,0.02);
       border: none;
-      padding: 16px 32px;
-      border-radius: 60px;
-      font-size: 1.2rem;
+      position: relative;
+    }
+
+    /* BANDEAU HAUT */
+    .journal-header {
+      border-bottom: 1.5px solid #1e1e1e;
+      padding: 1.2rem 1.2rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .journal-date {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #5e5e5e;
+      font-family: 'Inter', Arial, sans-serif;
+      margin-bottom: 0.3rem;
+    }
+
+    .journal-title {
+      font-size: 2.2rem;
       font-weight: 700;
-      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: -0.5px;
+      color: #0c0c0c;
+      line-height: 1;
+    }
+
+    .journal-sub {
+      font-size: 0.65rem;
+      color: #5e5e5e;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* UNE PRINCIPALE */
+    .une {
+      padding: 1.8rem 1.5rem;
+      border-bottom: 1px solid #dad7d0;
+    }
+
+    .kicker {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #9e3c3c;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+      font-family: 'Cormorant Garamond', serif;
+      color: #0c0c0c;
+    }
+
+    .subhead {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #3e3e3e;
+      margin-bottom: 1.2rem;
+      border-left: 3px solid #9e3c3c;
+      padding-left: 1rem;
+    }
+
+    .article-meta {
+      font-size: 0.7rem;
+      color: #6b6b6b;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .fausse-photo {
+      background: #e9e2d9;
+      padding: 1.5rem 0.5rem;
+      text-align: center;
+      font-size: 2.8rem;
+      letter-spacing: 6px;
+      color: #4a4238;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+
+    .chapeau {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.8rem;
+      color: #1e1e1e;
+    }
+
+    p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #2a2a2a;
+      margin-bottom: 1rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .secret-link {
+      background: #efebe6;
+      padding: 1.2rem;
+      text-align: center;
+      margin: 1.8rem 0 0.2rem;
+      border-radius: 32px;
+      border: 1px dashed #9e3c3c;
+    }
+
+    .btn-journal {
+      background: transparent;
+      border: 1.5px solid #9e3c3c;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #9e3c3c;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
       transition: 0.2s;
-      border: 2px solid white;
-      box-shadow: 0 8px 0 rgba(0,0,0,0.2);
-      margin: 10px;
+      cursor: pointer;
     }
 
-    .btn-primary {
-      background: #ff4d6d;
+    .btn-journal:hover {
+      background: #9e3c3c;
       color: white;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 0 #b33a4a;
+    /* DOSSIER SECRET */
+    .dossier-secret {
+      padding: 1.8rem 1.5rem;
+      background: #f9f7f4;
+      border-top: 1px solid #d6d0c8;
     }
 
-    .btn-secret {
-      background: #2c3e50;
-      color: white;
-      border-color: #1e2b36;
+    .section {
+      padding: 2rem 1.5rem;
+      border-top: 1px solid #ddd8d0;
     }
 
     .hidden {
       display: none !important;
     }
 
-    /* ========== DOSSIER FICTIF ========== */
-    .fake-profile {
-      display: flex;
-      align-items: center;
-      gap: 25px;
-      margin-top: 20px;
-      background: #0f1a2b;
-      padding: 20px;
-      border-radius: 30px;
-    }
-    body.love-mode .fake-profile {
-      background: #ffecec;
-    }
-    .avatar {
-      font-size: 5rem;
-    }
-    .infos p {
-      margin: 8px 0;
-      font-size: 1.1rem;
-    }
-    .secret-tag {
-      background: #ff4d6d;
-      color: white;
-      padding: 6px 16px;
-      border-radius: 50px;
-      display: inline-block;
-      margin-top: 15px;
-    }
-
-    /* ========== CŒURS FLOTTANTS ========== */
-    .floating-hearts {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 10;
-    }
-    .heart {
-      position: absolute;
-      font-size: 24px;
-      opacity: 0.4;
-      animation: float 8s infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-30px) rotate(15deg); }
-    }
-
-    /* ========== MINI-JEU ========== */
+    /* MINI-JEU */
     .jeu-container {
-      text-align: center;
-      background: #ffe5e5;
-      padding: 25px;
-      border-radius: 40px;
-      color: #333;
-      margin-top: 20px;
+      background: #f2ede7;
+      padding: 2rem 1.2rem;
+      border-radius: 24px;
+      margin-top: 1.2rem;
     }
+
     .cible {
-      background: #ff4d6d;
-      color: white;
-      font-size: 2.5rem;
-      width: 120px;
-      height: 120px;
+      background: #c44;
+      width: 85px;
+      height: 85px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 20px auto;
+      font-size: 2.2rem;
+      color: white;
+      margin: 1.5rem auto;
+      box-shadow: 0 10px 0 #7a2a2a;
+      transition: 0.05s;
       cursor: pointer;
-      box-shadow: 0 12px 0 #b33a4a;
-      transition: 0.1s;
       user-select: none;
     }
+
     .cible:active {
-      transform: translateY(12px);
-      box-shadow: 0 5px 0 #b33a4a;
+      transform: translateY(8px);
+      box-shadow: 0 4px 0 #7a2a2a;
     }
 
-    /* ========== PROPOSITION ========== */
+    /* PROPOSITION */
     .love-card {
+      background: #fffbf9;
+      border: 2px solid #f1c0c0;
+      padding: 2rem 1.5rem;
+      border-radius: 32px;
       text-align: center;
     }
-    .valentine-word {
-      background: #ff4d6d;
+
+    .btn-oui {
+      background: #d65959;
       color: white;
-      padding: 8px 25px;
+      border: none;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.7rem;
+      border-radius: 80px;
+      font-weight: 700;
+      box-shadow: 0 10px 0 #9e4040;
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    .btn-non {
+      background: #cfcfcf;
+      color: #5e5e5e;
+      border: none;
+      padding: 0.9rem 1.8rem;
       border-radius: 60px;
-      display: inline-block;
-      font-size: 2rem;
-      transform: rotate(-3deg);
-      box-shadow: 0 10px 0 #b33a4a;
-    }
-    .non {
-      background: #ccc;
-      color: #666;
-      box-shadow: 0 8px 0 #999;
-      cursor: not-allowed;
+      font-size: 1.1rem;
+      box-shadow: 0 7px 0 #8f8f8f;
     }
 
-    /* ========== CONTRAT ========== */
+    /* CONTRAT */
     .contrat {
-      background: #fff9e6;
-      padding: 30px;
-      border-radius: 40px;
-      border: 6px double #ff8a8a;
-      color: #3e3e3e;
-      text-align: left;
+      background: #fffcf0;
+      border: 4px double #b87c7c;
+      padding: 1.8rem;
       font-family: 'Courier New', monospace;
-      margin-top: 20px;
-    }
-    .signature-btn {
-      background: #ffb347;
-      color: black;
-      font-size: 1.5rem;
-      padding: 15px 40px;
-      margin-top: 20px;
-      box-shadow: 0 10px 0 #cc9020;
-    }
-    .signature-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 14px 0 #cc9020;
+      border-radius: 20px;
     }
 
-    /* ========== ANIMATIONS ========== */
-    @keyframes pop {
-      0% { transform: scale(0); }
-      80% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    .btn-signature {
+      background: #f0b27a;
+      color: #1e1e1e;
+      font-size: 1.4rem;
+      padding: 1.1rem;
+      border-radius: 100px;
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 10px 0 #aa7a4a;
+      width: 100%;
+      margin-top: 1.5rem;
     }
-    .pop {
-      animation: pop 0.4s;
+
+    /* TÉLÉPHONE */
+    @media (min-width: 480px) {
+      .journal {
+        max-width: 440px;
+        margin: 0 auto;
+      }
+    }
+
+    .footer-journal {
+      padding: 1.5rem;
+      text-align: center;
+      border-top: 1px solid #d6d0c8;
+      font-size: 0.65rem;
+      color: #777;
+      text-transform: uppercase;
+    }
+
+    .micro-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.55rem;
+      color: #6e6e6e;
+      border-bottom: 1px dotted #ccc;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .message-perso {
+      background: #fcf8f0;
+      padding: 1.2rem;
+      border-radius: 20px;
+      margin-top: 1.2rem;
+      font-style: italic;
+      border-left: 4px solid #b03e3e;
     }
   </style>
+  <!-- FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Cœurs flottants décoratifs (peu visibles au début, plus visibles en love mode) -->
-  <div class="floating-hearts" id="hearts"></div>
+  <div class="journal" id="journal">
+    <!-- MICRO INFOS -->
+    <div class="micro-info">
+      <span>📰 ÉDITION BORDEAUX</span>
+      <span>⭐ UNE SEULE</span>
+      <span>2,50€</span>
+    </div>
 
-  <div class="dossier" id="dossierPrincipal">
-    <!-- ===== ÉTAPE 1 : FAUX DOSSIER ===== -->
-    <div id="etape1">
-      <div class="confidentiel">
-        <span style="font-size: 3rem;">🔒</span>
-        <h1>DOSSIER CONFIDENTIEL</h1>
-        <p style="opacity: 0.8;">Niveau de sécurité : MAXIMUM</p>
-      </div>
+    <!-- HEADER JOURNAL -->
+    <div class="journal-header">
+      <div class="journal-date">MARDI 16 FÉVRIER 2026</div>
+      <div class="journal-title">LE SOIR</div>
+      <div class="journal-sub">QUOTIDIEN INDÉPENDANT • 142e ANNÉE</div>
+    </div>
 
-      <div class="fake-profile">
-        <div class="avatar">👤</div>
-        <div class="infos">
-          <p><strong>Nom :</strong> COLINE</p>
-          <p><strong>Prénom :</strong> [CLASSIFIÉ]</p>
-          <p><strong>Statut :</strong> ❤️ Cible prioritaire</p>
-          <p><strong>Dernière activité :</strong> A fait battre mon cœur ❤️</p>
+    <!-- === PAGE 1 : UNE SANS AUCUNE INFOS PERSONNELLES === -->
+    <div id="page1">
+      <div class="une">
+        <span class="kicker">🎨 LA RENCONTRE</span>
+        <h1>Coline,<br>celle qui a tout changé</h1>
+        <div class="subhead">
+          Il n'y a pas de prix, pas de concours. Juste une histoire que personne n'avait vue venir.
+        </div>
+        <div class="article-meta">
+          ✦ Par Kélyann
+        </div>
+
+        <!-- ILLUSTRATION NEUTRE -->
+        <div class="fausse-photo">
+          ✦ ✦ ✦ ✦ ✦
+        </div>
+
+        <p class="chapeau">
+          Au début, c'était pas gagné. Nos parents, les emplois du temps, les villes pas si proches. 
+          On a dû ruser, planifier, trouver des créneaux comme des agents secrets.
+        </p>
+        <p>
+          Mais on l'a fait. On a réussi à se voir, à se parler, à se découvrir. 
+          Et aujourd'hui, je sais une chose : j'ai envie de continuer. 
+          Pendant longtemps, j'ai cherché comment te le dire sans que ce soit trop tôt ou trop maladroit.
+        </p>
+        <p style="font-style: italic; color: #4f4f4f;">
+          « Alors j'ai fait ce journal. Juste pour toi. »
+        </p>
+
+        <!-- BANDEAU SECRET -->
+        <div class="secret-link">
+          <span style="font-size: 1.8rem; display: block; margin-bottom: 8px;">📄</span>
+          <p style="font-weight: 700; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 2px; font-size: 0.75rem;">
+            SUITE DE L'ARTICLE EN PAGE CONFIDENTIELLE
+          </p>
+          <button id="btnReveler" class="btn-journal">
+            ⚡ LIRE LA SUITE
+          </button>
+          <p style="margin-top: 14px; font-size: 0.75rem; color: #9e3c3c;">
+            (Clique, c'est pour toi)
+          </p>
         </div>
       </div>
 
-      <div style="text-align: center; margin-top: 30px;">
-        <span class="secret-tag">📁 1 dossier secret disponible</span>
-        <p style="margin: 25px 0 15px; font-style: italic;">
-          ██████ contient des informations ultra confidentielles sur Coline...
-        </p>
-        <button id="btnReveler" class="btn btn-secret">
-          🔓 RÉVÉLER L'HISTOIRE SECRÈTE
-        </button>
-        <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6;">
-          (Attention : cette action changera ta vie à jamais)
-        </p>
+      <!-- PETIT ENCADRÉ SANS INFO PRIVÉE -->
+      <div style="padding: 0.2rem 1.5rem 1.8rem;">
+        <div style="background: #f0ece6; padding: 1.2rem; border-radius: 16px;">
+          <span style="font-weight: 700; font-size: 0.85rem;">🔍 CE QU'ON SAIT</span>
+          <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+            Juste un prénom : Coline. Et un type qui signe Kélyann, qui a l'air bien décidé à lui faire sa déclaration.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- ===== ÉTAPE 2 : MINI-JEU ===== -->
-    <div id="etape2" class="hidden">
-      <h2 style="text-align: center;">🔐 ACCÈS CONTRÔLÉ</h2>
-      <div style="background: #2c3e50; border-radius: 30px; padding: 20px; margin-top: 20px; color: white;">
-        <p style="font-size: 1.3rem;">👋 Salut Coline, c'est Kélyann.</p>
-        <p style="margin-top: 15px;">
-          J'ai caché un secret sur toi... mais pour le déverrouiller, 
-          tu dois d'abord prouver que tu es prête. 
-          <br><strong>Attrape 5 cœurs qui apparaîtront !</strong> ❤️
+    <!-- === PAGE 2 : MINI-JEU / ÉPREUVE === -->
+    <div id="page2" class="hidden section dossier-secret">
+      <span style="font-size: 0.7rem; background: #1e1e1e; color: white; padding: 6px 14px; border-radius: 40px; letter-spacing: 1px;">🔐 PAGE RÉSERVÉE</span>
+      <h2 style="font-size: 1.9rem; margin: 1.2rem 0 0.3rem;">Manuscrit trouvé</h2>
+      <p style="font-size: 1rem;"><em>“Je pourrais te faire un long discours, mais j’ai préféré un jeu.”</em></p>
+      <p style="margin-top: 1rem;">— Kélyann, l’auteur de cette page.</p>
+      
+      <div style="margin-top: 2rem;">
+        <p style="font-weight: 700; font-size: 1.2rem;">🕹️ Attrape 7 cœurs</p>
+        <p style="margin-bottom: 0.2rem; font-size: 0.95rem;">
+          Coline, le vrai message est derrière ce petit jeu. (Il va bouger, le bougre)
         </p>
-      </div>
-
-      <div class="jeu-container" id="jeu">
-        <p style="font-size: 1.5rem;">💓 Cœurs attrapés : <span id="score">0</span>/5</p>
-        <div id="cible" class="cible">❤️</div>
-        <p id="jeuMessage" style="margin-top: 15px; font-weight: bold;">Clique sur le cœur !</p>
+        
+        <div class="jeu-container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 600;">❤️ Cœurs</span>
+            <span id="score" style="font-weight: 700; background: #222; color: white; padding: 5px 16px; border-radius: 40px;">0/7</span>
+          </div>
+          <div id="cible" class="cible">❤️</div>
+          <p id="jeuMessage" style="text-align: center; margin-top: 1.2rem; font-size: 1rem;">
+            Clique sur le cœur. Il est un peu fuyard.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- ===== ÉTAPE 3 : PROPOSITION ===== -->
-    <div id="etape3" class="hidden love-card">
-      <div style="font-size: 3rem; text-align: center;">🥰💘</div>
-      <h1 style="text-align: center; font-size: 2.5rem;">Coline...</h1>
-      <p style="text-align: center; font-size: 1.6rem; margin: 25px 0;">
-        Le secret, c'est que <br> <span class="valentine-word">je t'aime</span>
-      </p>
-      <p style="text-align: center; font-size: 1.4rem;">
-        Alors... <br> <strong>veux-tu être ma Valentine ?</strong>
-      </p>
+    <!-- === PAGE 3 : PROPOSITION === -->
+    <div id="page3" class="hidden section love-card">
+      <span style="font-size: 4.2rem;">💌</span>
+      <h1 style="font-size: 2.4rem; margin-top: 0.5rem; color: #b04545;">Coline…</h1>
+      <p style="font-size: 1.3rem; margin: 1rem 0; font-weight: 600;">T’as gagné le droit de lire la suite.</p>
+      <p style="font-size: 1.2rem;">(Mais tu l’avais déjà, de toute façon)</p>
+      
+      <div style="margin: 2rem 0 1.5rem;">
+        <p style="font-size: 1.9rem; font-weight: 700; background: #ffe7e7; padding: 0.8rem; border-radius: 60px;">
+          Tu veux être ma Valentine ?
+        </p>
+      </div>
 
-      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 35px 0 20px;">
-        <button id="ouiLove" class="btn btn-primary" style="font-size: 1.8rem; padding: 20px 50px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <button id="ouiLove" class="btn-oui">
           ❤️ OUI ❤️
         </button>
-        <div style="position: relative;">
-          <button id="nonLove" class="btn non" style="font-size: 1.4rem;">
+        <div style="position: relative; width: 100%; display: flex; justify-content: center;">
+          <button id="nonLove" class="btn-non">
             😤 Non
           </button>
-          <div id="nonWarning" class="hidden" style="position: absolute; top: 100%; left: 0; background: red; color: white; padding: 8px; border-radius: 30px; white-space: nowrap; margin-top: 10px;">
-            Tu peux pas cliquer là, voyons !
+          <div id="nonWarning" class="hidden" style="position: absolute; bottom: 110%; background: #1a1a1a; color: white; padding: 10px 18px; border-radius: 50px; white-space: nowrap; font-size: 0.8rem;">
+            🚫 Pas possible, désolé. (c'est Kélyann qui contrôle)
           </div>
         </div>
       </div>
-      <p style="text-align: center; font-style: italic;">(le bouton Non est une illusion)</p>
     </div>
 
-    <!-- ===== ÉTAPE 4 : CONTRAT ===== -->
-    <div id="etape4" class="hidden">
+    <!-- === PAGE 4 : CONTRAT === -->
+    <div id="page4" class="hidden section">
       <div class="contrat">
-        <h2 style="text-align: center; color: #d44; font-size: 2rem;">📜 CONTRAT DE SAINT-VALENTIN</h2>
-        <p style="text-align: right; margin-top: 10px;">Fait à ❤️, le 14 février 2026</p>
+        <h2 style="text-align: center; font-size: 1.9rem;">📜 CONTRAT</h2>
+        <p style="text-align: center; margin-bottom: 1.8rem; font-size: 0.95rem;">Entre Kélyann et Coline</p>
         
-        <p style="margin-top: 30px;"><strong>Entre les soussignés :</strong></p>
-        <p><strong>Kélyann</strong>, alias le garçon le plus chanceux du monde,</p>
-        <p>Et <strong>Coline</strong>, la personne la plus merveilleuse de l'univers,</p>
+        <p style="margin-top: 1.2rem;">1️⃣ Coline accepte d’être la Valentine de Kélyann. (Plus qu’à cocher la case)</p>
+        <p style="margin-top: 1rem;">2️⃣ Le 16 février, j’ai trop hâte de te voir et de te faire plein de câlins. (vraiment beaucoup)</p>
+        <p style="margin-top: 1rem;">3️⃣ Au début c’était pas gagné avec nos parents, les planning, tout ça… mais on a réussi à planifier cette rencontre. Et franchement, j’en suis hyper fier.</p>
+        <p style="margin-top: 1rem;">4️⃣ Ce contrat est valable aussi longtemps qu’on voudra. (donc très très longtemps)</p>
         
-        <p style="margin-top: 25px;"><strong>Il a été convenu ce qui suit :</strong></p>
-        <ol style="margin-left: 25px; margin-top: 15px;">
-          <li>Coline accepte d'être la Valentine officielle de Kélyann.</li>
-          <li>Kélyann aura le droit de faire des câlins, offrir des chocolats et regarder des films sous un plaid.</li>
-          <li>Le 14 février, rendez-vous est pris pour fêter ça (au choix : resto, pique-nique ou soirée crêpes).</li>
-          <li>Ce contrat est valable pour toute l'éternité (et même au-delà).</li>
-        </ol>
-
-        <p style="margin-top: 30px;"><strong>Signature de Coline :</strong></p>
-        <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
-          <span style="background: #ffe0e0; padding: 12px 25px; border-radius: 40px; border: 2px dashed #ff6b6b; font-size: 1.2rem;">__________________</span>
-          <button id="btnSigner" class="btn signature-btn">
-            ✍️ SIGNER LE CONTRAT
-          </button>
+        <div style="margin-top: 2.2rem;">
+          <p style="font-weight: 700;">Signature de Coline :</p>
+          <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 12px;">
+            <span style="border-bottom: 2px dashed #b04545; padding-bottom: 8px; width: 180px;">__________________</span>
+            <button id="btnSigner" class="btn-signature">
+              ✍️ SIGNER LE CONTRAT
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== ÉTAPE 5 : FÉLICITATIONS FINAL ===== -->
-    <div id="etape5" class="hidden" style="text-align: center;">
-      <div style="font-size: 5rem; animation: pop 0.6s;">🎉💖✨</div>
-      <h1 style="font-size: 2.8rem; color: #ff4d6d; margin-top: 20px;">CONTRAT ACCEPTÉ !</h1>
-      <p style="font-size: 1.8rem; margin: 30px 0;">
-        Coline, tu es officiellement ma Valentine 💘
-      </p>
-      <p style="font-size: 1.3rem; background: white; padding: 20px; border-radius: 60px;">
-        Merci d'avoir joué le jeu...<br> 
-        Je t'aime, et j'ai trop hâte au 14 février. <br>
-        <strong>Signé : Kélyann</strong> ❤️
-      </p>
-      <div style="margin-top: 30px; font-size: 2rem;">
-        🥂🍫❤️
+    <!-- === PAGE 5 : MERCI === -->
+    <div id="page5" class="hidden section" style="text-align: center; padding: 3rem 1.5rem;">
+      <span style="font-size: 5rem;">❤️✨</span>
+      <h1 style="font-size: 2.4rem; margin: 1.8rem 0; color: #b04545;">Merci, Coline.</h1>
+      <p style="font-size: 1.5rem; margin-bottom: 2rem;">T’as signé. Maintenant c’est officiel.</p>
+      
+      <div class="message-perso">
+        <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem;">
+          J’ai trop hâte de te voir le 16.
+        </p>
+        <p style="font-size: 1.2rem;">
+          Et de te faire plein de câlins. ❤️
+        </p>
       </div>
+      
+      <div style="margin-top: 2.5rem; font-size: 1.6rem; font-family: 'Cormorant Garamond', serif; border-top: 1px solid #ddd; padding-top: 2rem;">
+        — Kélyann
+      </div>
+    </div>
+
+    <!-- PIED DE PAGE -->
+    <div class="footer-journal">
+      LE SOIR — ÉDITION NUMÉRIQUE — NE PEUT ÊTRE VENDU
     </div>
   </div>
 
   <script>
-    (function() {
-      "use strict";
-
-      // --- ÉLÉMENTS ---
-      const body = document.body;
-      const etape1 = document.getElementById('etape1');
-      const etape2 = document.getElementById('etape2');
-      const etape3 = document.getElementById('etape3');
-      const etape4 = document.getElementById('etape4');
-      const etape5 = document.getElementById('etape5');
+    (function(){
+      // ========== AUCUNE DONNÉE PERSONNELLE STOCKÉE, JUSTE DU FUN ==========
+      const page1 = document.getElementById('page1');
+      const page2 = document.getElementById('page2');
+      const page3 = document.getElementById('page3');
+      const page4 = document.getElementById('page4');
+      const page5 = document.getElementById('page5');
       const btnReveler = document.getElementById('btnReveler');
-      
-      // --- Mini-jeu ---
+      const body = document.body;
+
+      // --- JEU ---
       let score = 0;
       const scoreSpan = document.getElementById('score');
       const cible = document.getElementById('cible');
       const jeuMessage = document.getElementById('jeuMessage');
 
-      // --- Proposition ---
+      // --- PROPOSITION ---
       const ouiLove = document.getElementById('ouiLove');
       const nonLove = document.getElementById('nonLove');
       const nonWarning = document.getElementById('nonWarning');
 
-      // --- Contrat ---
+      // --- CONTRAT ---
       const btnSigner = document.getElementById('btnSigner');
 
-      // --- Cœurs flottants (décor) ---
-      const heartsContainer = document.getElementById('hearts');
-      function createHearts() {
-        for (let i = 0; i < 15; i++) {
-          const heart = document.createElement('span');
-          heart.className = 'heart';
-          heart.innerHTML = '❤️';
-          heart.style.left = Math.random() * 100 + '%';
-          heart.style.top = Math.random() * 100 + '%';
-          heart.style.animationDelay = Math.random() * 5 + 's';
-          heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
-          heart.style.opacity = '0.2';
-          heartsContainer.appendChild(heart);
-        }
-      }
-      createHearts();
-
-      // --- 1. Révéler l'histoire secrète ---
+      // ========== 1. RÉVÉLER LE DOSSIER ==========
       btnReveler.addEventListener('click', function() {
-        // Passe en mode love (arrière-plan clair)
         body.classList.add('love-mode');
-        etape1.classList.add('hidden');
-        etape2.classList.remove('hidden');
-        // Change les cœurs en plus visibles
-        document.querySelectorAll('.heart').forEach(h => h.style.opacity = '0.6');
+        page1.classList.add('hidden');
+        page2.classList.remove('hidden');
+        if(jeuMessage) jeuMessage.textContent = 'Clique sur le cœur. Il est un peu fuyard.';
       });
 
-      // --- 2. Mini-jeu : attraper le cœur qui bouge ---
+      // ========== 2. MINI-JEU : 7 CŒURS ==========
       function deplacerCible() {
         if (!cible) return;
-        const jeuContainer = document.querySelector('.jeu-container');
-        if (!jeuContainer) return;
-        const maxX = jeuContainer.clientWidth - cible.clientWidth - 20;
-        const maxY = jeuContainer.clientHeight - cible.clientHeight - 20;
-        let x = Math.max(10, Math.min(maxX, Math.random() * maxX));
-        let y = Math.max(10, Math.min(maxY, Math.random() * maxY));
+        const container = document.querySelector('.jeu-container');
+        if (!container) return;
+        const maxX = container.clientWidth - cible.clientWidth - 15;
+        const maxY = container.clientHeight - cible.clientHeight - 15;
+        let x = Math.max(5, Math.min(maxX, Math.random() * maxX));
+        let y = Math.max(5, Math.min(maxY, Math.random() * maxY));
         cible.style.position = 'relative';
         cible.style.left = x + 'px';
         cible.style.top = y + 'px';
       }
 
-      cible.addEventListener('click', function(e) {
-        if (score < 5) {
-          score++;
-          scoreSpan.textContent = score;
-          jeuMessage.textContent = '❤️ Super ! Encore ' + (5 - score) + ' cœur(s) !';
-          if (score === 5) {
-            jeuMessage.textContent = '🎉 BRAVO ! Tu as déverrouillé le secret !';
-            cible.style.display = 'none';
-            // Passer à l'étape 3 après un petit délai
-            setTimeout(function() {
-              etape2.classList.add('hidden');
-              etape3.classList.remove('hidden');
-            }, 1500);
-          } else {
+      if (cible) {
+        cible.addEventListener('click', function(e) {
+          if (score < 7) {
+            score++;
+            scoreSpan.textContent = score + '/7';
+            if (score === 7) {
+              jeuMessage.textContent = '🎉 BRAVO ! Voilà la vraie page.';
+              cible.style.display = 'none';
+              setTimeout(() => {
+                page2.classList.add('hidden');
+                page3.classList.remove('hidden');
+              }, 1100);
+            } else {
+              jeuMessage.textContent = '❤️ Encore ' + (7 - score) + ' cœur(s) !';
+              deplacerCible();
+            }
+          }
+        });
+
+        cible.addEventListener('mouseenter', function() {
+          if (score < 7) {
             deplacerCible();
           }
-        }
-      });
+        });
+      }
 
-      // Le cœur bouge aussi quand la souris s'approche (pour plus de fun)
-      cible.addEventListener('mouseenter', function() {
-        if (score < 5) {
-          deplacerCible();
-        }
-      });
+      // ========== 3. BOUTON NON ==========
+      if (nonLove) {
+        nonLove.addEventListener('click', function(e) {
+          e.preventDefault();
+          nonWarning.classList.remove('hidden');
+          nonLove.style.transform = 'translateX(' + (Math.random() * 80 - 40) + 'px) translateY(' + (Math.random() * 40 - 20) + 'px)';
+          nonLove.style.transition = '0.1s';
+          setTimeout(() => nonWarning.classList.add('hidden'), 1100);
+        });
 
-      // --- 3. Proposition : gestion du NON qui fuit ---
-      nonLove.addEventListener('click', function(e) {
-        e.preventDefault();
-        nonWarning.classList.remove('hidden');
-        // Fait bouger le bouton NON
-        nonLove.style.transform = 'translateX(' + (Math.random() * 80 - 40) + 'px) translateY(' + (Math.random() * 40 - 20) + 'px)';
-        setTimeout(() => nonWarning.classList.add('hidden'), 1200);
-      });
+        nonLove.addEventListener('mouseenter', function() {
+          nonLove.style.transform = 'translateX(' + (Math.random() * 100 - 50) + 'px) translateY(' + (Math.random() * 60 - 30) + 'px)';
+        });
+      }
 
-      nonLove.addEventListener('mouseenter', function() {
-        nonLove.style.transform = 'translateX(' + (Math.random() * 100 - 50) + 'px) translateY(' + (Math.random() * 60 - 30) + 'px)';
-      });
+      // ========== 4. OUI = CONTRAT ==========
+      if (ouiLove) {
+        ouiLove.addEventListener('click', function() {
+          page3.classList.add('hidden');
+          page4.classList.remove('hidden');
+          // petites étoiles
+          for (let i=0;i<16;i++) {
+            setTimeout(() => {
+              let h = document.createElement('span');
+              h.innerHTML = '❤️';
+              h.style.position = 'fixed';
+              h.style.left = Math.random()*100+'%';
+              h.style.top = Math.random()*100+'%';
+              h.style.fontSize = (Math.random()*25+18)+'px';
+              h.style.pointerEvents = 'none';
+              h.style.zIndex = 9999;
+              h.style.opacity = '0.7';
+              h.style.transition = '0.9s';
+              document.body.appendChild(h);
+              setTimeout(() => h.remove(), 800);
+            }, i*12);
+          }
+        });
+      }
 
-      // OUI : passage au contrat
-      ouiLove.addEventListener('click', function() {
-        etape3.classList.add('hidden');
-        etape4.classList.remove('hidden');
-        // Explosion de cœurs
-        for (let i = 0; i < 20; i++) {
-          setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.top = Math.random() * 100 + '%';
-            heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
-            heart.style.animation = 'float 1s ease-out';
-            heart.style.pointerEvents = 'none';
-            heart.style.zIndex = '9999';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1000);
-          }, i * 20);
-        }
-      });
-
-      // --- 4. Contrat : signature ---
-      btnSigner.addEventListener('click', function() {
-        etape4.classList.add('hidden');
-        etape5.classList.remove('hidden');
-        // Encore plus de cœurs !
-        for (let i = 0; i < 40; i++) {
-          setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.innerHTML = '❤️🧡💛💚💙💜';
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.top = Math.random() * 100 + '%';
-            heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
-            heart.style.animation = 'float 1.5s ease-out';
-            heart.style.pointerEvents = 'none';
-            heart.style.zIndex = '9999';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 1500);
-          }, i * 15);
-        }
-      });
-
+      // ========== 5. SIGNATURE ==========
+      if (btnSigner) {
+        btnSigner.addEventListener('click', function() {
+          page4.classList.add('hidden');
+          page5.classList.remove('hidden');
+          for (let i=0;i<30;i++) {
+            setTimeout(() => {
+              let h = document.createElement('span');
+              h.innerHTML = ['❤️','🧡','💛','💚','💙','💜','✨','💫'][Math.floor(Math.random()*8)];
+              h.style.position = 'fixed';
+              h.style.left = Math.random()*100+'%';
+              h.style.top = Math.random()*100+'%';
+              h.style.fontSize = (Math.random()*28+18)+'px';
+              h.style.pointerEvents = 'none';
+              h.style.zIndex = 9999;
+              h.style.transition = '1.4s';
+              document.body.appendChild(h);
+              setTimeout(() => h.remove(), 1400);
+            }, i*18);
+          }
+        });
+      }
     })();
   </script>
 </body>
