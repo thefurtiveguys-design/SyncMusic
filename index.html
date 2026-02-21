@@ -3,20 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOUVENIR</title>
+    <title>SOUVENIR · Notre histoire</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
+        /* ============================================
+           STYLE CSS - VERSION CORRIGÉE
+           ============================================ */
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
             background: linear-gradient(135deg, #fff0f5, #f9e6f0);
             min-height: 100vh;
         }
-        .screen { display: none; padding: 20px; }
-        .screen.active { display: block; }
-        .login-container { max-width: 300px; margin: 100px auto; text-align: center; }
-        h1 { font-size: 48px; color: #ff6b9d; margin-bottom: 10px; }
-        .subtitle { color: #888; margin-bottom: 30px; }
+
+        /* Écrans */
+        .screen {
+            display: none;
+            min-height: 100vh;
+        }
+        .screen.active {
+            display: block !important;
+        }
+
+        /* Connexion */
+        .login-container {
+            max-width: 300px;
+            margin: 100px auto;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 48px;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
         input, button, textarea, select {
             width: 100%;
             padding: 12px;
@@ -32,8 +61,18 @@
             border: none;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
         }
-        button:hover { background: #ff4d8c; }
+        button:hover {
+            background: #ff4d8c;
+        }
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* Header */
         header {
             background: white;
             padding: 15px 20px;
@@ -42,18 +81,121 @@
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .view-toggle { display: flex; gap: 10px; margin: 15px 0; }
-        .view { display: none; }
-        .view.active { display: block; }
-        .souvenirs-feed { margin-top: 20px; }
+        h2 {
+            color: #ff6b9d;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #current-user {
+            color: #ff6b9d;
+            font-weight: 600;
+        }
+        .btn-icon {
+            background: none;
+            color: #666;
+            width: auto;
+            padding: 8px 12px;
+            margin: 0;
+        }
+        .btn-icon:hover {
+            background: #f5f5f5;
+            color: #ff6b9d;
+        }
+
+        /* Vue toggle */
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        .view-toggle button {
+            flex: 1;
+            background: #f5f5f5;
+            color: #666;
+            margin: 0;
+            padding: 10px;
+        }
+        .view-toggle button.active {
+            background: #ff6b9d;
+            color: white;
+        }
+
+        /* Views */
+        .view {
+            display: none !important;
+            padding: 20px;
+        }
+        .view.active {
+            display: block !important;
+        }
+
+        /* Feed */
+        .btn-add {
+            margin-bottom: 20px;
+            background: #ff6b9d;
+        }
+        .souvenirs-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
         .souvenir-card {
             background: white;
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 15px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .souvenir-photo { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .souvenir-photo {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .souvenir-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .souvenir-date {
+            color: #888;
+            font-size: 14px;
+        }
+        .souvenir-emotion {
+            font-size: 20px;
+        }
+        .souvenir-text {
+            font-size: 16px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        .souvenir-author {
+            color: #ff6b9d;
+            font-style: italic;
+            text-align: right;
+        }
+
+        /* Calendar */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .calendar-header button {
+            width: auto;
+            padding: 8px 15px;
+            margin: 0;
+        }
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -61,7 +203,13 @@
             background: white;
             padding: 15px;
             border-radius: 12px;
-            margin: 20px 0;
+            margin-bottom: 20px;
+        }
+        .calendar-day-header {
+            text-align: center;
+            font-weight: bold;
+            color: #ff6b9d;
+            padding: 5px;
         }
         .calendar-day {
             aspect-ratio: 1;
@@ -69,19 +217,49 @@
             align-items: center;
             justify-content: center;
             background: #f5f5f5;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 14px;
         }
-        .calendar-day.has-souvenir { background: #ffd9e4; }
+        .calendar-day.has-souvenir {
+            background: #ffd9e4;
+            font-weight: bold;
+        }
+        .calendar-day.selected {
+            background: #ff6b9d;
+            color: white;
+        }
+        .calendar-day.empty {
+            background: none;
+            cursor: default;
+        }
+        .selected-day-souvenirs {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            min-height: 100px;
+        }
+        .selected-day-souvenirs h4 {
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+
+        /* Modal */
         .modal {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 1000;
         }
-        .modal.hidden { display: none; }
+        .modal.hidden {
+            display: none !important;
+        }
         .modal-content {
             background: white;
             padding: 20px;
@@ -91,7 +269,10 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        .hidden { display: none !important; }
+        .modal-content h3 {
+            color: #ff6b9d;
+            margin-bottom: 20px;
+        }
         .photo-upload {
             border: 2px dashed #ddd;
             padding: 20px;
@@ -100,8 +281,52 @@
             cursor: pointer;
             margin: 10px 0;
         }
-        #photo-input { display: none; }
-        .btn-icon { background: none; color: #666; }
+        .photo-upload:hover {
+            border-color: #ff6b9d;
+        }
+        #photo-input {
+            display: none;
+        }
+        .photo-preview {
+            min-height: 50px;
+        }
+        .photo-preview i {
+            font-size: 40px;
+            color: #ff6b9d;
+            margin-bottom: 10px;
+        }
+        .author-select {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-secondary {
+            background: #ccc;
+        }
+        .btn-secondary:hover {
+            background: #999;
+        }
+
+        /* Utilitaires */
+        .hidden {
+            display: none !important;
+        }
+        .loading, .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -116,38 +341,40 @@
         </div>
     </div>
 
-    <!-- APPLICATION -->
+    <!-- APPLICATION PRINCIPALE -->
     <div id="app-screen" class="screen hidden">
         <header>
             <h2>SOUVENIR</h2>
-            <div>
+            <div class="user-info">
                 <span id="current-user"></span>
                 <button class="btn-icon" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </header>
 
         <div class="view-toggle">
-            <button onclick="switchView('feed')">📱 Fil</button>
-            <button onclick="switchView('calendar')">📅 Calendrier</button>
+            <button id="view-feed-btn" class="active" onclick="switchView('feed')">📱 Fil</button>
+            <button id="view-calendar-btn" onclick="switchView('calendar')">📅 Calendrier</button>
         </div>
 
         <!-- VUE FIL -->
         <div id="feed-view" class="view active">
-            <button onclick="showAddSouvenir()" style="margin: 10px 0;">+ Nouveau souvenir</button>
+            <button class="btn-add" onclick="showAddSouvenir()">+ Nouveau souvenir</button>
             <div id="souvenirs-feed" class="souvenirs-feed">
-                <p>Chargement...</p>
+                <div class="loading">Chargement des souvenirs...</div>
             </div>
         </div>
 
         <!-- VUE CALENDRIER -->
         <div id="calendar-view" class="view hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
-                <button onclick="changeMonth(-1)">◀</button>
+            <div class="calendar-header">
+                <button onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
                 <h3 id="current-month"></h3>
-                <button onclick="changeMonth(1)">▶</button>
+                <button onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
             <div id="calendar-grid" class="calendar-grid"></div>
-            <div id="selected-day-souvenirs"></div>
+            <div id="selected-day-souvenirs" class="selected-day-souvenirs">
+                <h4>Cliquez sur un jour</h4>
+            </div>
         </div>
 
         <!-- MODAL D'AJOUT -->
@@ -157,32 +384,45 @@
                 
                 <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
                     <input type="file" id="photo-input" accept="image/*">
-                    <div id="photo-preview">
-                        <i class="fas fa-camera"></i> Ajouter une photo
+                    <div id="photo-preview" class="photo-preview">
+                        <i class="fas fa-camera"></i>
+                        <p>Ajouter une photo</p>
                     </div>
                 </div>
 
                 <textarea id="souvenir-text" rows="3" placeholder="Raconte ce moment..."></textarea>
-                <input type="date" id="souvenir-date">
                 
-                <select id="souvenir-emotion">
-                    <option value="❤️">❤️ Amour</option>
-                    <option value="😊">😊 Joie</option>
-                    <option value="🌟">🌟 Spécial</option>
-                </select>
-
-                <div style="margin: 10px 0;">
-                    <label><input type="radio" name="author" value="elle" checked> Elle</label>
-                    <label><input type="radio" name="author" value="lui"> Lui</label>
-                    <label><input type="radio" name="author" value="nous"> Nous deux</label>
+                <div style="display: flex; gap: 10px; margin: 10px 0;">
+                    <input type="date" id="souvenir-date" style="flex: 2;">
+                    <select id="souvenir-emotion" style="flex: 1;">
+                        <option value="❤️">❤️</option>
+                        <option value="😊">😊</option>
+                        <option value="🌟">🌟</option>
+                        <option value="🥰">🥰</option>
+                    </select>
                 </div>
 
-                <button onclick="saveSouvenir()">Publier</button>
-                <button onclick="hideModal()" style="background: #ccc;">Annuler</button>
+                <div class="author-select">
+                    <label class="radio-label">
+                        <input type="radio" name="author" value="elle" checked> Elle
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="author" value="lui"> Lui
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="author" value="nous"> Nous deux
+                    </label>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="hideModal()">Annuler</button>
+                    <button onclick="saveSouvenir()">Publier</button>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ============================================
         // CONFIGURATION
@@ -194,7 +434,7 @@
         const SECRET_CODE = "SOUVENIR2026";
         
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log("✅ Supabase OK");
+        console.log("✅ Supabase initialisé");
         
         let allSouvenirs = [];
         let currentMonth = new Date();
@@ -205,21 +445,26 @@
         // CONNEXION
         // ============================================
         window.checkCode = function() {
+            console.log("🔑 Tentative de connexion");
             const code = document.getElementById('secret-code').value;
+            
             if (code === SECRET_CODE) {
+                console.log("✅ Code correct");
                 document.getElementById('login-screen').classList.remove('active');
                 document.getElementById('app-screen').classList.add('active');
                 document.getElementById('current-user').textContent = '✨ Connecté';
                 loadSouvenirs();
             } else {
-                alert('Code incorrect');
+                alert('❌ Code incorrect');
             }
         };
 
         // ============================================
-        // CHARGEMENT
+        // CHARGEMENT DES SOUVENIRS
         // ============================================
         async function loadSouvenirs() {
+            console.log("📥 Chargement des souvenirs...");
+            
             try {
                 const { data, error } = await supabaseClient
                     .from('souvenirs')
@@ -228,41 +473,60 @@
                 
                 if (error) throw error;
                 
+                console.log("✅ Souvenirs reçus:", data);
                 allSouvenirs = data || [];
                 renderFeed();
                 renderCalendar();
                 
             } catch (error) {
-                console.error(error);
+                console.error('❌ Erreur:', error);
                 document.getElementById('souvenirs-feed').innerHTML = 
-                    '<p style="color: red;">Erreur de chargement</p>';
+                    `<div class="empty-state">Erreur: ${error.message}</div>`;
             }
         }
 
         // ============================================
-        // AFFICHAGE
+        // AFFICHAGE DU FIL
         // ============================================
         function renderFeed() {
             const feed = document.getElementById('souvenirs-feed');
+            if (!feed) return;
+            
             if (allSouvenirs.length === 0) {
-                feed.innerHTML = '<p style="text-align: center; padding: 40px;">Aucun souvenir. Ajoutez-en un !</p>';
+                feed.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart" style="font-size: 48px; color: #ff6b9d; margin-bottom: 20px;"></i>
+                        <p>Aucun souvenir pour le moment</p>
+                        <button onclick="showAddSouvenir()" style="margin-top: 20px; width: auto; padding: 10px 20px;">+ Ajouter</button>
+                    </div>
+                `;
                 return;
             }
             
             feed.innerHTML = allSouvenirs.map(s => `
                 <div class="souvenir-card">
                     ${s.photo_url ? `<img src="${s.photo_url}" class="souvenir-photo">` : ''}
-                    <p><strong>${s.texte}</strong></p>
-                    <p>${s.date} ${s.emotion || '❤️'}</p>
-                    <p><small>${s.auteur}</small></p>
+                    <div class="souvenir-header">
+                        <span class="souvenir-date">${formatDate(s.date)}</span>
+                        <span class="souvenir-emotion">${s.emotion || '❤️'}</span>
+                    </div>
+                    <p class="souvenir-text">${s.texte}</p>
+                    <div class="souvenir-author">
+                        ${s.auteur === 'elle' ? '🌸 Elle' : s.auteur === 'lui' ? '✨ Lui' : '💑 Nous deux'}
+                    </div>
                 </div>
             `).join('');
+            
+            console.log("Feed mis à jour");
         }
 
         // ============================================
         // CALENDRIER
         // ============================================
         function renderCalendar() {
+            const calendar = document.getElementById('calendar-grid');
+            if (!calendar) return;
+            
             const year = currentMonth.getFullYear();
             const month = currentMonth.getMonth();
             
@@ -277,46 +541,56 @@
             
             let html = '';
             ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].forEach(day => {
-                html += `<div style="text-align: center; font-weight: bold;">${day}</div>`;
+                html += `<div class="calendar-day-header">${day}</div>`;
             });
             
             for (let i = 0; i < startDay; i++) {
-                html += `<div></div>`;
+                html += `<div class="calendar-day empty"></div>`;
             }
             
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
                 const hasSouvenir = allSouvenirs.some(s => s.date === dateStr);
+                const isSelected = selectedDate === dateStr;
                 
-                html += `<div class="calendar-day ${hasSouvenir ? 'has-souvenir' : ''}" 
+                html += `<div class="calendar-day ${hasSouvenir ? 'has-souvenir' : ''} ${isSelected ? 'selected' : ''}" 
                               onclick="selectDate('${dateStr}')">${day}</div>`;
             }
             
-            document.getElementById('calendar-grid').innerHTML = html;
+            calendar.innerHTML = html;
         }
 
         window.selectDate = function(dateStr) {
+            selectedDate = dateStr;
             const souvenirs = allSouvenirs.filter(s => s.date === dateStr);
             const container = document.getElementById('selected-day-souvenirs');
             
             if (souvenirs.length === 0) {
-                container.innerHTML = '<p>Aucun souvenir ce jour</p>';
-            } else {
-                container.innerHTML = souvenirs.map(s => `
-                    <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
-                        <p><strong>${s.texte}</strong></p>
-                        <p><small>${s.auteur}</small></p>
+                container.innerHTML = `
+                    <h4>${formatDate(dateStr)}</h4>
+                    <div class="empty-state">
+                        <p>Aucun souvenir ce jour-là</p>
+                        <button onclick="showAddSouvenirWithDate('${dateStr}')" style="margin-top: 10px;">+ Ajouter</button>
                     </div>
-                `).join('');
+                `;
+            } else {
+                container.innerHTML = `
+                    <h4>${formatDate(dateStr)}</h4>
+                    ${souvenirs.map(s => `
+                        <div style="background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                            <p><strong>${s.texte}</strong></p>
+                            <p><small>${s.auteur} ${s.emotion || ''}</small></p>
+                        </div>
+                    `).join('')}
+                `;
             }
+            
+            renderCalendar();
         };
 
-        // ============================================
-        // NAVIGATION
-        // ============================================
-        window.switchView = function(view) {
-            document.getElementById('feed-view').classList.toggle('active', view === 'feed');
-            document.getElementById('calendar-view').classList.toggle('active', view === 'calendar');
+        window.showAddSouvenirWithDate = function(dateStr) {
+            document.getElementById('souvenir-date').value = dateStr;
+            showAddSouvenir();
         };
 
         window.changeMonth = function(delta) {
@@ -325,15 +599,30 @@
         };
 
         // ============================================
+        // CHANGEMENT DE VUE
+        // ============================================
+        window.switchView = function(view) {
+            document.getElementById('feed-view').classList.toggle('active', view === 'feed');
+            document.getElementById('calendar-view').classList.toggle('active', view === 'calendar');
+            document.getElementById('view-feed-btn').classList.toggle('active', view === 'feed');
+            document.getElementById('view-calendar-btn').classList.toggle('active', view === 'calendar');
+        };
+
+        // ============================================
         // MODAL
         // ============================================
         window.showAddSouvenir = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('souvenir-date').value = today;
             document.getElementById('souvenir-modal').classList.remove('hidden');
-            document.getElementById('souvenir-date').value = new Date().toISOString().split('T')[0];
         };
 
         window.hideModal = function() {
             document.getElementById('souvenir-modal').classList.add('hidden');
+            document.getElementById('souvenir-text').value = '';
+            document.getElementById('photo-input').value = '';
+            photoFile = null;
+            document.getElementById('photo-preview').innerHTML = '<i class="fas fa-camera"></i><p>Ajouter une photo</p>';
         };
 
         // ============================================
@@ -349,7 +638,7 @@
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             document.getElementById('photo-preview').innerHTML = 
-                                `<img src="${e.target.result}" style="max-width: 100%; max-height: 150px;">`;
+                                `<img src="${e.target.result}" style="max-width: 100%; max-height: 150px; border-radius: 8px;">`;
                         };
                         reader.readAsDataURL(file);
                     }
@@ -371,35 +660,55 @@
                 return;
             }
             
+            if (!date) {
+                alert('Choisis une date !');
+                return;
+            }
+            
             try {
                 let photoUrl = null;
                 
                 if (photoFile) {
+                    console.log("Upload photo:", photoFile.name);
                     const fileName = `${Date.now()}_${photoFile.name}`;
+                    
                     const { error: uploadError } = await supabaseClient.storage
                         .from('souvenirs-photos')
                         .upload(fileName, photoFile);
                     
-                    if (!uploadError) {
-                        const { data } = supabaseClient.storage
-                            .from('souvenirs-photos')
-                            .getPublicUrl(fileName);
-                        photoUrl = data.publicUrl;
+                    if (uploadError) {
+                        console.error("Erreur upload:", uploadError);
+                        alert("Erreur upload photo: " + uploadError.message);
+                        return;
                     }
+                    
+                    const { data } = supabaseClient.storage
+                        .from('souvenirs-photos')
+                        .getPublicUrl(fileName);
+                    
+                    photoUrl = data.publicUrl;
+                    console.log("Photo uploadée:", photoUrl);
                 }
                 
                 const { error } = await supabaseClient
                     .from('souvenirs')
-                    .insert([{ texte: text, date: date, emotion: emotion, auteur: author, photo_url: photoUrl }]);
+                    .insert([{
+                        texte: text,
+                        date: date,
+                        emotion: emotion,
+                        auteur: author,
+                        photo_url: photoUrl
+                    }]);
                 
                 if (error) throw error;
                 
-                alert('✅ Ajouté !');
+                alert('✅ Souvenir ajouté !');
                 hideModal();
                 loadSouvenirs();
                 
             } catch (error) {
-                alert('Erreur: ' + error.message);
+                console.error('Erreur:', error);
+                alert('Erreur : ' + error.message);
             }
         };
 
@@ -412,7 +721,24 @@
             document.getElementById('secret-code').value = '';
         };
 
-        console.log("✅ Script prêt");
+        // ============================================
+        // UTILITAIRES
+        // ============================================
+        function formatDate(dateStr) {
+            return new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-FR', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+        }
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        window.onload = function() {
+            console.log("❤️ SOUVENIR - Prêt");
+            renderCalendar();
+        };
+
+        console.log("✅ Script chargé");
     </script>
 </body>
 </html>
