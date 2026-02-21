@@ -613,3 +613,29 @@ input:focus, textarea:focus, select:focus {
         font-size: 12px;
     }
 }
+
+/* ============================================
+   DEBUG - À AJOUTER À LA FIN DU CSS
+   ============================================ */
+#feed-view, #calendar-view {
+    display: block !important;
+    min-height: 400px;
+    background: rgba(255,255,255,0.5);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+.souvenirs-feed {
+    min-height: 200px;
+    border: 2px dashed #ff6b9d;
+    padding: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
