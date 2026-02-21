@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOUVENIR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fff0f5, #f9e6f0);
+            min-height: 100vh;
+        }
+        .screen { display: none; padding: 20px; }
+        .screen.active { display: block; }
+        .login-container { max-width: 300px; margin: 100px auto; text-align: center; }
+        h1 { font-size: 48px; color: #ff6b9d; margin-bottom: 10px; }
+        .subtitle { color: #888; margin-bottom: 30px; }
+        input, button, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover { background: #ff4d8c; }
+        header {
+            background: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .view-toggle { display: flex; gap: 10px; margin: 15px 0; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .souvenirs-feed { margin-top: 20px; }
+        .souvenir-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .souvenir-photo { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .calendar-day.has-souvenir { background: #ffd9e4; }
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.hidden { display: none; }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .hidden { display: none !important; }
+        .photo-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        #photo-input { display: none; }
+        .btn-icon { background: none; color: #666; }
+    </style>
+</head>
+<body>
+    <!-- ÉCRAN DE CONNEXION -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <h1>SOUVENIR</h1>
+            <p class="subtitle">Notre histoire, nos moments</p>
+            <input type="password" id="secret-code" placeholder="Code secret">
+            <button onclick="checkCode()">Accéder</button>
+            <p class="hint">(celui qu'on s'est dit)</p>
+        </div>
+    </div>
+
+    <!-- APPLICATION -->
+    <div id="app-screen" class="screen hidden">
+        <header>
+            <h2>SOUVENIR</h2>
+            <div>
+                <span id="current-user"></span>
+                <button class="btn-icon" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </header>
+
+        <div class="view-toggle">
+            <button onclick="switchView('feed')">📱 Fil</button>
+            <button onclick="switchView('calendar')">📅 Calendrier</button>
+        </div>
+
+        <!-- VUE FIL -->
+        <div id="feed-view" class="view active">
+            <button onclick="showAddSouvenir()" style="margin: 10px 0;">+ Nouveau souvenir</button>
+            <div id="souvenirs-feed" class="souvenirs-feed">
+                <p>Chargement...</p>
+            </div>
+        </div>
+
+        <!-- VUE CALENDRIER -->
+        <div id="calendar-view" class="view hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                <button onclick="changeMonth(-1)">◀</button>
+                <h3 id="current-month"></h3>
+                <button onclick="changeMonth(1)">▶</button>
+            </div>
+            <div id="calendar-grid" class="calendar-grid"></div>
+            <div id="selected-day-souvenirs"></div>
+        </div>
+
+        <!-- MODAL D'AJOUT -->
+        <div id="souvenir-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Nouveau souvenir</h3>
+                
+                <div class="photo-upload" onclick="document.getElementById('photo-input').click()">
+                    <input type="file" id="photo-input" accept="image/*">
+                    <div id="photo-preview">
+                        <i class="fas fa-camera"></i> Ajouter une photo
+                    </div>
+                </div>
+
+                <textarea id="souvenir-text" rows="3" placeholder="Raconte ce moment..."></textarea>
+                <input type="date" id="souvenir-date">
+                
+                <select id="souvenir-emotion">
+                    <option value="❤️">❤️ Amour</option>
+                    <option value="😊">😊 Joie</option>
+                    <option value="🌟">🌟 Spécial</option>
+                </select>
+
+                <div style="margin: 10px 0;">
+                    <label><input type="radio" name="author" value="elle" checked> Elle</label>
+                    <label><input type="radio" name="author" value="lui"> Lui</label>
+                    <label><input type="radio" name="author" value="nous"> Nous deux</label>
+                </div>
+
+                <button onclick="saveSouvenir()">Publier</button>
+                <button onclick="hideModal()" style="background: #ccc;">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        console.log("🚀 Démarrage");
+        
+        const SUPABASE_URL = 'https://jtdhgrihatgqtphelmlx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZGhncmloYXRncXRwaGVsbWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDYxNjYsImV4cCI6MjA4NzE4MjE2Nn0.ieSj9GxVykIkACfyR8DfeAAqwAUq2UM5wRjSPJ5ONhE';
+        const SECRET_CODE = "SOUVENIR2026";
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log("✅ Supabase OK");
+        
+        let allSouvenirs = [];
+        let currentMonth = new Date();
+        let selectedDate = null;
+        let photoFile = null;
+
+        // ============================================
+        // CONNEXION
+        // ============================================
+        window.checkCode = function() {
+            const code = document.getElementById('secret-code').value;
+            if (code === SECRET_CODE) {
+                document.getElementById('login-screen').classList.remove('active');
+                document.getElementById('app-screen').classList.add('active');
+                document.getElementById('current-user').textContent = '✨ Connecté';
+                loadSouvenirs();
+            } else {
+                alert('Code incorrect');
+            }
+        };
+
+        // ============================================
+        // CHARGEMENT
+        // ============================================
+        async function loadSouvenirs() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('souvenirs')
+                    .select('*')
+                    .order('date', { ascending: false });
+                
+                if (error) throw error;
+                
+                allSouvenirs = data || [];
+                renderFeed();
+                renderCalendar();
+                
+            } catch (error) {
+                console.error(error);
+                document.getElementById('souvenirs-feed').innerHTML = 
+                    '<p style="color: red;">Erreur de chargement</p>';
+            }
+        }
+
+        // ============================================
+        // AFFICHAGE
+        // ============================================
+        function renderFeed() {
+            const feed = document.getElementById('souvenirs-feed');
+            if (allSouvenirs.length === 0) {
+                feed.innerHTML = '<p style="text-align: center; padding: 40px;">Aucun souvenir. Ajoutez-en un !</p>';
+                return;
+            }
+            
+            feed.innerHTML = allSouvenirs.map(s => `
+                <div class="souvenir-card">
+                    ${s.photo_url ? `<img src="${s.photo_url}" class="souvenir-photo">` : ''}
+                    <p><strong>${s.texte}</strong></p>
+                    <p>${s.date} ${s.emotion || '❤️'}</p>
+                    <p><small>${s.auteur}</small></p>
+                </div>
+            `).join('');
+        }
+
+        // ============================================
+        // CALENDRIER
+        // ============================================
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            
+            document.getElementById('current-month').textContent = 
+                new Date(year, month).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1);
+            let startDay = firstDay.getDay();
+            startDay = startDay === 0 ? 6 : startDay - 1;
+            
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            let html = '';
+            ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].forEach(day => {
+                html += `<div style="text-align: center; font-weight: bold;">${day}</div>`;
+            });
+            
+            for (let i = 0; i < startDay; i++) {
+                html += `<div></div>`;
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const hasSouvenir = allSouvenirs.some(s => s.date === dateStr);
+                
+                html += `<div class="calendar-day ${hasSouvenir ? 'has-souvenir' : ''}" 
+                              onclick="selectDate('${dateStr}')">${day}</div>`;
+            }
+            
+            document.getElementById('calendar-grid').innerHTML = html;
+        }
+
+        window.selectDate = function(dateStr) {
+            const souvenirs = allSouvenirs.filter(s => s.date === dateStr);
+            const container = document.getElementById('selected-day-souvenirs');
+            
+            if (souvenirs.length === 0) {
+                container.innerHTML = '<p>Aucun souvenir ce jour</p>';
+            } else {
+                container.innerHTML = souvenirs.map(s => `
+                    <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                        <p><strong>${s.texte}</strong></p>
+                        <p><small>${s.auteur}</small></p>
+                    </div>
+                `).join('');
+            }
+        };
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        window.switchView = function(view) {
+            document.getElementById('feed-view').classList.toggle('active', view === 'feed');
+            document.getElementById('calendar-view').classList.toggle('active', view === 'calendar');
+        };
+
+        window.changeMonth = function(delta) {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            renderCalendar();
+        };
+
+        // ============================================
+        // MODAL
+        // ============================================
+        window.showAddSouvenir = function() {
+            document.getElementById('souvenir-modal').classList.remove('hidden');
+            document.getElementById('souvenir-date').value = new Date().toISOString().split('T')[0];
+        };
+
+        window.hideModal = function() {
+            document.getElementById('souvenir-modal').classList.add('hidden');
+        };
+
+        // ============================================
+        // PHOTO
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const photoInput = document.getElementById('photo-input');
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        photoFile = file;
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('photo-preview').innerHTML = 
+                                `<img src="${e.target.result}" style="max-width: 100%; max-height: 150px;">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        // ============================================
+        // SAUVEGARDE
+        // ============================================
+        window.saveSouvenir = async function() {
+            const text = document.getElementById('souvenir-text').value;
+            const date = document.getElementById('souvenir-date').value;
+            const emotion = document.getElementById('souvenir-emotion').value;
+            const author = document.querySelector('input[name="author"]:checked')?.value || 'nous';
+            
+            if (!text) {
+                alert('Écris ton souvenir !');
+                return;
+            }
+            
+            try {
+                let photoUrl = null;
+                
+                if (photoFile) {
+                    const fileName = `${Date.now()}_${photoFile.name}`;
+                    const { error: uploadError } = await supabaseClient.storage
+                        .from('souvenirs-photos')
+                        .upload(fileName, photoFile);
+                    
+                    if (!uploadError) {
+                        const { data } = supabaseClient.storage
+                            .from('souvenirs-photos')
+                            .getPublicUrl(fileName);
+                        photoUrl = data.publicUrl;
+                    }
+                }
+                
+                const { error } = await supabaseClient
+                    .from('souvenirs')
+                    .insert([{ texte: text, date: date, emotion: emotion, auteur: author, photo_url: photoUrl }]);
+                
+                if (error) throw error;
+                
+                alert('✅ Ajouté !');
+                hideModal();
+                loadSouvenirs();
+                
+            } catch (error) {
+                alert('Erreur: ' + error.message);
+            }
+        };
+
+        // ============================================
+        // DÉCONNEXION
+        // ============================================
+        window.logout = function() {
+            document.getElementById('app-screen').classList.remove('active');
+            document.getElementById('login-screen').classList.add('active');
+            document.getElementById('secret-code').value = '';
+        };
+
+        console.log("✅ Script prêt");
+    </script>
+</body>
+</html>
