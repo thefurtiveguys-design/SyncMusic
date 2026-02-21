@@ -1,717 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Batterie intégrale de tests psychologiques</title>
-  <style>
-    /* ---------- STYLE SOBRE, 100% MOBILE, GRANDS CIBLES ---------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    body {
-      background: #eef2f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 12px;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 780px;
-      width: 100%;
-      background: white;
-      border-radius: 28px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-      padding: 28px 22px;
-      border: 1px solid #e0e8ef;
-    }
-
-    .entete {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      border-bottom: 1px solid #d4e0e8;
-      padding-bottom: 16px;
-      margin-bottom: 24px;
-    }
-
-    .entete h1 {
-      font-weight: 540;
-      font-size: 1.5rem;
-      color: #1e3a4d;
-      letter-spacing: -0.3px;
-    }
-
-    .phase-indicator {
-      background: #e2ecf3;
-      padding: 6px 18px;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      color: #1e3a4d;
-      font-weight: 540;
-    }
-
-    /* zone de test */
-    .test-card {
-      background: #ffffff;
-      border-radius: 24px;
-      padding: 26px 20px;
-      margin-bottom: 28px;
-      border: 1px solid #e9f0f5;
-      box-shadow: 0 4px 10px #00000008;
-    }
-
-    .titre-test {
-      font-weight: 620;
-      font-size: 1.25rem;
-      color: #0f2c3b;
-      border-left: 5px solid #3f7e9c;
-      padding-left: 16px;
-      margin-bottom: 22px;
-    }
-
-    .consigne {
-      background: #f1f7fc;
-      padding: 16px 20px;
-      border-radius: 20px;
-      margin-bottom: 28px;
-      font-size: 1rem;
-      color: #1f4a5e;
-      border-left: 4px solid #7fa3b7;
-      line-height: 1.5;
-    }
-
-    .btn, .option-btn, .emotion-btn, .choice-btn, .svo-btn, .iq-btn, .big5-btn {
-      display: inline-block;
-      background: white;
-      border: 1.5px solid #cbd8e2;
-      padding: 14px 22px;
-      border-radius: 60px;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: #0f2c3b;
-      margin: 6px 8px 6px 0;
-      transition: 0.08s;
-      cursor: pointer;
-      touch-action: manipulation;
-      border: 1.5px solid #ccdbe6;
-      background: #f9fcff;
-    }
-
-    .btn-primary {
-      background: #2f647a;
-      border-color: #1e4759;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #1f4e63;
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    /* BART ballon */
-    .ballon-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .ballon-svg {
-      width: 160px;
-      height: 180px;
-    }
-    .caisse {
-      background: #e6f0f5;
-      padding: 14px 26px;
-      border-radius: 60px;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #043b50;
-      margin: 15px 0 10px;
-    }
-
-    /* Grille Raven */
-    .grille-matrice {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      background: #254356;
-      padding: 18px;
-      border-radius: 24px;
-      margin: 20px 0;
-    }
-    .cellule {
-      background: white;
-      width: 85px;
-      height: 85px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      border-radius: 14px;
-    }
-    .choix-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin: 18px 0;
-    }
-
-    /* RME */
-    .stimulus-yeux {
-      font-size: 4.2rem;
-      background: #f2f6fb;
-      padding: 12px 24px;
-      border-radius: 60px;
-      display: inline-block;
-    }
-
-    /* échelles (likert) */
-    .echelle {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 18px 0;
-    }
-    .echelle-btn {
-      background: #f0f6fa;
-      border: 1px solid #b8cfde;
-      padding: 14px 18px;
-      border-radius: 40px;
-      font-size: 1rem;
-    }
-
-    /* dashboard lettres */
-    .dashboard {
-      background: #162b37;
-      border-radius: 26px;
-      padding: 24px 20px;
-      margin: 36px 0 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 18px;
-      color: white;
-    }
-    .cat {
-      text-align: center;
-    }
-    .cat-lettre {
-      font-size: 2.2rem;
-      font-weight: 680;
-      color: #ffe7b6;
-    }
-    .cat-score {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: #0000001c;
-      padding: 6px 12px;
-      border-radius: 50px;
-    }
-
-    /* admin */
-    .admin {
-      background: #eaf0f5;
-      border-radius: 24px;
-      padding: 22px;
-      border-left: 8px solid #162b37;
-    }
-    .code-area {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    #codeSecret {
-      padding: 14px 18px;
-      font-size: 1.3rem;
-      width: 130px;
-      text-align: center;
-      border-radius: 60px;
-      border: 1px solid #9bb1c2;
-      background: white;
-      letter-spacing: 3px;
-    }
-    .interpretation {
-      background: #fdfaec;
-      padding: 24px;
-      border-radius: 20px;
-      margin-top: 24px;
-      border: 1px solid #e5dcb6;
-      white-space: pre-line;
-    }
-    .hidden { display: none; }
-    hr { border: 1px solid #dbe5ed; margin: 28px 0; }
-    .footer {
-      font-size: 0.7rem;
-      color: #597a8a;
-      text-align: center;
-      margin-top: 24px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncMusic - Écoutez ensemble</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="entete">
-      <h1>LABORATOIRE PSYCHOLOGIE</h1>
-      <span class="phase-indicator" id="phaseLabel">test 1/23</span>
+    <div class="container">
+        <div class="logo">
+            <h1>Sync<span>Music</span></h1>
+            <p>Écoutez Spotify ensemble, en temps réel</p>
+        </div>
+
+        <!-- Écran de création/rejoindre -->
+        <div id="home-screen">
+            <div class="input-group">
+                <label>Code de session</label>
+                <input type="text" id="session-code" placeholder="Entrez un code (ex: ABC123)" maxlength="6">
+            </div>
+            
+            <button class="btn btn-primary" onclick="joinSession()">
+                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                Rejoindre une session
+            </button>
+            
+            <div class="divider">
+                <span>ou</span>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="createSession()">
+                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>
+                Créer une nouvelle session
+            </button>
+            
+            <p style="text-align: center; margin-top: 30px; color: var(--text-secondary); font-size: 12px;">
+                <i class="fas fa-shield-alt" style="margin-right: 5px;"></i>
+                Sessions privées et sécurisées
+            </p>
+        </div>
+
+        <!-- Écran d'attente (affiché après création) -->
+        <div id="waiting-screen" class="hidden">
+            <div class="session-info">
+                <h2>Code de votre session</h2>
+                <div class="session-code">
+                    <h3>Partagez ce code avec votre ami(e)</h3>
+                    <div class="code" id="display-code">ABC123</div>
+                </div>
+            </div>
+            
+            <div class="connected-users">
+                <div class="user connected">
+                    <div class="user-avatar"></div>
+                    <div class="user-name">Vous</div>
+                </div>
+                <div class="user" id="friend-status">
+                    <div class="user-avatar"></div>
+                    <div class="user-name">En attente...</div>
+                </div>
+            </div>
+            
+            <div class="status" id="waiting-message">
+                <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+                En attente qu'un ami rejoigne...
+            </div>
+            
+            <button class="btn btn-secondary" onclick="copyCode()">
+                <i class="fas fa-copy" style="margin-right: 8px;"></i>
+                Copier le code
+            </button>
+        </div>
     </div>
 
-    <!-- Affichage du test courant -->
-    <div id="testPanel" class="test-card"></div>
-
-    <!-- Tableau de bord lettres (tous les scores) -->
-    <div class="dashboard" id="dashboardScores"></div>
-
-    <!-- Espace chercheur (code 1983) -->
-    <div class="admin">
-      <div style="font-weight: 620; color: #162b37; margin-bottom: 14px;">ACCÈS CHERCHEUR</div>
-      <div class="code-area">
-        <input type="password" id="codeSecret" placeholder="code" maxlength="4" inputmode="numeric">
-        <button id="unlockBtn" class="btn" style="background:#162b37; color:white;">déverrouiller</button>
-        <button id="resetBtn" class="btn">réinitialiser</button>
-      </div>
-      <div id="adminInterp" class="interpretation hidden"></div>
-    </div>
-    <div class="footer">BART · SVO · RAVEN · RME · BIG5 · MMPI · WAIS · WISC · STROOP · TMT · N-BACK · EQ · TAS-20 · FACIAL · GO/NOGO · IOWA · DELAY · BDI · STAI · PCL5</div>
-  </div>
-
-  <script>
-    // --------------------------------------------------------------
-    //  BATTERIE PSYCHOLOGIQUE COMPLÈTE – 23 TESTS, FLUX LINÉAIRE
-    //  CHAQUE TEST EST SIMPLIFIÉ MAIS REPRÉSENTATIF, CONSIGNES EN FRANÇAIS
-    // --------------------------------------------------------------
-    const State = {
-      phase: 0,                     // index dans PHASES
-      scores: {},                  // stockage brut par test
-      // scores spécifiques pour calculs intermédiaires
-      bart: { pumps: [], done: 0, active: false, pumpsTemp: 0, tempMoney: 0, explosion: 8 },
-      svo: { responses: [], idx: 0 },
-      raven: { score: 0, idx: 0 },
-      rme: { score: 0, idx: 0 },
-      big5: { reponses: [], idx: 0 },
-      mmpi: { reponses: [], idx: 0 },
-      wais: { reponses: [], idx: 0 },
-      wisc: { reponses: [], idx: 0 },
-      stroop: { reponses: [], idx: 0, essais: 0 },
-      tmt: { etape: 0 },
-      nback: { essai: 0, reponses: [] },
-      eq: { reponses: [], idx: 0 },
-      tas20: { reponses: [], idx: 0 },
-      facial: { reponses: [], idx: 0 },
-      gonogo: { essai: 0, score: 0 },
-      iowa: { essai: 0, score: 0, historique: [] },
-      delay: { choix: null },
-      bdi: { reponses: [], idx: 0 },
-      stai: { reponses: [], idx: 0 },
-      pcl5: { reponses: [], idx: 0 }
-    };
-
-    // --------------------------------------------------------------
-    //  DÉFINITION DES 23 PHASES (tests) – ORDRE IMPOSÉ
-    // --------------------------------------------------------------
-    const PHASES = [
-      { id: 'bart', nom: 'BART – prise de risque' },
-      { id: 'svo', nom: 'SVO – prosocialité' },
-      { id: 'raven', nom: 'Matrices de Raven' },
-      { id: 'rme', nom: 'Reading the Mind in the Eyes' },
-      { id: 'big5', nom: 'Big Five (OCEAN)' },
-      { id: 'mmpi', nom: 'MMPI (échelle brève)' },
-      { id: 'wais', nom: 'WAIS – similarités' },
-      { id: 'wisc', nom: 'WISC – matrices' },
-      { id: 'stroop', nom: 'Stroop – inhibition' },
-      { id: 'tmt', nom: 'Trail Making Test' },
-      { id: 'nback', nom: 'N-back (mémoire de travail)' },
-      { id: 'eq', nom: 'Empathy Quotient' },
-      { id: 'tas20', nom: 'Échelle d’alexithymie (TAS-20)' },
-      { id: 'facial', nom: 'Reconnaissance émotions faciales' },
-      { id: 'gonogo', nom: 'Go/No-Go – impulsivité' },
-      { id: 'iowa', nom: 'Iowa Gambling Task' },
-      { id: 'delay', nom: 'Actualisation temporelle' },
-      { id: 'bdi', nom: 'Beck Depression Inventory' },
-      { id: 'stai', nom: 'STAI anxiété' },
-      { id: 'pcl5', nom: 'PCL-5 (stress post-traumatique)' }
-    ];
-
-    // --------------------------------------------------------------
-    //  LETTRES ATTRIBUÉES À CHAQUE TEST (A à W)
-    // --------------------------------------------------------------
-    const LETTRES = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W'];
-
-    // --------------------------------------------------------------
-    //  STIMULI, ITEMS, CONFIGURATIONS (extraits représentatifs)
-    // --------------------------------------------------------------
-
-    // ----- BART (déjà existant, on améliore les consignes) -----
-    // ----- SVO (6 items) -----
-    const SVO_ITEMS = [
-      { choixA: 'vous 85€ / autre 85€', choixB: 'vous 100€ / autre 50€', prosocial: 0 },
-      { choixA: 'vous 85€ / autre 85€', choixB: 'vous 95€ / autre 15€', prosocial: 0 },
-      { choixA: 'vous 60€ / autre 50€', choixB: 'vous 50€ / autre 100€', prosocial: 1 },
-      { choixA: 'vous 75€ / autre 65€', choixB: 'vous 90€ / autre 30€', prosocial: 0 },
-      { choixA: 'vous 45€ / autre 80€', choixB: 'vous 70€ / autre 70€', prosocial: 1 },
-      { choixA: 'vous 100€ / autre 20€', choixB: 'vous 85€ / autre 85€', prosocial: 1 }
-    ];
-
-    // ----- RAVEN (3 items) -----
-    const RAVEN_ITEMS = [
-      { matrice: ['◼','◻','◼','◻','◼','◻','◼','◻','❓'], options: ['◼','◻','▣','◯'], correct: '◼' },
-      { matrice: ['1','2','3','4','5','6','7','8','❓'], options: ['9','10','11','12'], correct: '9' },
-      { matrice: ['▲','△','▲','△','▲','△','▲','△','❓'], options: ['▲','△','◀','▶'], correct: '▲' }
-    ];
-
-    // ----- RME (6 items) -----
-    const RME_ITEMS = [
-      { stimulus: '[ REGARD 1 ]', options: ['hostile','paniqué','amusé','confiant'], correct: 'confiant' },
-      { stimulus: '[ REGARD 2 ]', options: ['sceptique','jaloux','affectueux','terrifié'], correct: 'sceptique' },
-      { stimulus: '[ REGARD 3 ]', options: ['désireux','arrogant','gêné','rêveur'], correct: 'rêveur' },
-      { stimulus: '[ REGARD 4 ]', options: ['irrité','triste','préoccupé','amical'], correct: 'préoccupé' },
-      { stimulus: '[ REGARD 5 ]', options: ['relaxé','menaçant','surpris','fier'], correct: 'relaxé' },
-      { stimulus: '[ REGARD 6 ]', options: ['dubitatif','en colère','reconnaissant','affligé'], correct: 'dubitatif' }
-    ];
-
-    // ----- BIG FIVE (5 items, un par dimension) -----
-    const BIG5_ITEMS = [
-      { dimension: 'Ouverture', question: 'J’aime explorer des idées nouvelles.', inversion: false },
-      { dimension: 'Conscienciosité', question: 'Je termine toujours ce que je commence.', inversion: false },
-      { dimension: 'Extraversion', question: 'Je me sens à l’aise dans les groupes.', inversion: false },
-      { dimension: 'Agréabilité', question: 'Je fais confiance aux autres facilement.', inversion: false },
-      { dimension: 'Neuroticisme', question: 'Je me sens souvent tendu.', inversion: false }
-    ];
-
-    // ----- MMPI (3 items très simplifiés) -----
-    const MMPI_ITEMS = [
-      'Je me sens souvent triste sans raison.',
-      'On parle de moi dans mon dos.',
-      'J’ai des pensées que personne ne comprend.'
-    ];
-
-    // ----- WAIS (similarités) 2 items -----
-    const WAIS_ITEMS = [
-      { question: 'En quoi une pomme et une poire sont-elles semblables ?', reponses: ['fruits', 'comestibles', 'rondes'], correct: 0 },
-      { question: 'En quoi le vélo et la voiture sont-ils semblables ?', reponses: ['moyens de transport', 'roues', 'motorisés'], correct: 0 }
-    ];
-
-    // ----- WISC (matrices) 2 items -----
-    const WISC_ITEMS = [
-      { matrice: ['🐶','🐱','🐶','🐱','🐶','🐱','❓','🐱','🐶'], options: ['🐶','🐱','🐭'], correct: '🐶' },
-      { matrice: ['1','2','3','1','2','3','1','2','❓'], options: ['1','2','3','4'], correct: '3' }
-    ];
-
-    // ----- STROOP (2 essais) -----
-    const STROOP_ITEMS = [
-      { mot: 'ROUGE', couleur: 'blue' },
-      { mot: 'VERT', couleur: 'red' }
-    ];
-
-    // ----- TMT (simulation) -----
-    // ----- NBACK (1 essai) -----
-    // ----- EQ (3 items) -----
-    const EQ_ITEMS = [
-      'Je suis sensible aux sentiments des autres.',
-      'Je trouve facile de comprendre ce qu’une personne ressent.',
-      'Les amis me confient leurs problèmes.'
-    ];
-
-    // ----- TAS-20 (3 items) -----
-    const TAS20_ITEMS = [
-      'Je suis souvent confus(e) face à mes émotions.',
-      'Il m’est difficile de décrire ce que je ressens.',
-      'Je préfère qu’on ne me parle pas de mes sentiments.'
-    ];
-
-    // ----- FACIAL (2 émotions) -----
-    const FACIAL_ITEMS = [
-      { image: '[VISAGE JOYEUX]', options: ['joie','tristesse','colère','peur'], correct: 'joie' },
-      { image: '[VISAGE COLÈRE]', options: ['joie','tristesse','colère','peur'], correct: 'colère' }
-    ];
-
-    // ----- GO/NOGO (4 essais) -----
-    const GONOGO_ITEMS = [
-      { lettre: 'X', go: true },
-      { lettre: 'Y', go: false },
-      { lettre: 'X', go: true },
-      { lettre: 'Y', go: false }
-    ];
-
-    // ----- IOWA (simplifié, 2 tirages) -----
-    const IOWA_ITEMS = [
-      { deck: 'A', gain: 100, perte: 0 },
-      { deck: 'B', gain: 100, perte: 150 }
-    ];
-
-    // ----- DELAY DISCOUNTING (1 item) -----
-    // ----- BDI (4 items) -----
-    const BDI_ITEMS = [
-      'Tristesse',
-      'Pessimisme',
-      'Échec',
-      'Insatisfaction'
-    ];
-
-    // ----- STAI (4 items) -----
-    const STAI_ITEMS = [
-      'Je me sens calme',
-      'Je suis tendu(e)',
-      'Je me sens inquiet(ète)',
-      'Je suis détendu(e)'
-    ];
-
-    // ----- PCL5 (4 items) -----
-    const PCL5_ITEMS = [
-      'Souvenirs répétés et gênants de l’événement',
-      'Évitement des rappels de l’événement',
-      'Difficultés de sommeil',
-      'Irritabilité ou colère'
-    ];
-
-    // --------------------------------------------------------------
-    //  RENDU DU TEST COURANT
-    // --------------------------------------------------------------
-    function renderPhase() {
-      const panel = document.getElementById('testPanel');
-      const phaseId = PHASES[State.phase].id;
-      document.getElementById('phaseLabel').innerText = `test ${State.phase+1}/${PHASES.length}`;
-
-      switch (phaseId) {
-        case 'bart': panel.innerHTML = renderBART(); break;
-        case 'svo': panel.innerHTML = renderSVO(); break;
-        case 'raven': panel.innerHTML = renderRAVEN(); break;
-        case 'rme': panel.innerHTML = renderRME(); break;
-        case 'big5': panel.innerHTML = renderBIG5(); break;
-        case 'mmpi': panel.innerHTML = renderMMPI(); break;
-        case 'wais': panel.innerHTML = renderWAIS(); break;
-        case 'wisc': panel.innerHTML = renderWISC(); break;
-        case 'stroop': panel.innerHTML = renderSTROOP(); break;
-        case 'tmt': panel.innerHTML = renderTMT(); break;
-        case 'nback': panel.innerHTML = renderNBACK(); break;
-        case 'eq': panel.innerHTML = renderEQ(); break;
-        case 'tas20': panel.innerHTML = renderTAS20(); break;
-        case 'facial': panel.innerHTML = renderFACIAL(); break;
-        case 'gonogo': panel.innerHTML = renderGONOGO(); break;
-        case 'iowa': panel.innerHTML = renderIOWA(); break;
-        case 'delay': panel.innerHTML = renderDELAY(); break;
-        case 'bdi': panel.innerHTML = renderBDI(); break;
-        case 'stai': panel.innerHTML = renderSTAI(); break;
-        case 'pcl5': panel.innerHTML = renderPCL5(); break;
-        default: panel.innerHTML = '<p>Fin de la batterie</p>';
-      }
-      updateDashboard();
-      attachEvents(phaseId);
-    }
-
-    // --------------------------------------------------------------
-    //  FONCTIONS DE RENDU AVEC CONSIGNES CLAIRES EN FRANÇAIS
-    // --------------------------------------------------------------
-
-    // ----- BART -----
-    function renderBART() {
-      if (State.bart.done >= 30) { State.phase++; renderPhase(); return ''; }
-      if (!State.bart.active) {
-        State.bart.active = true;
-        State.bart.pumpsTemp = 0;
-        State.bart.tempMoney = 0;
-        State.bart.explosion = Math.floor(Math.random() * 18) + 6;
-      }
-      let html = `<div class="titre-test">🎈 BART – Évaluation du risque</div>`;
-      html += `<div class="consigne">➡️ Gonfle le ballon en cliquant sur "gonfler". Chaque pompe rapporte 5 points. Mais le ballon peut éclater à tout moment ! Si tu collectes avant, tu gagnes les points. Essaie de gagner un maximum sans faire éclater.</div>`;
-      html += `<div class="ballon-wrapper">`;
-      html += `<div class="ballon-svg"><svg width="140" height="160" viewBox="0 0 100 120"><circle cx="50" cy="50" r="${30 + State.bart.pumpsTemp*1.2}" fill="#bf616a" stroke="#7a3b3b" stroke-width="2"/></svg></div>`;
-      html += `<div class="caisse">💰 ${State.bart.tempMoney} points temporaires</div>`;
-      html += `<div style="display:flex; gap:16px; margin-top:12px;"><button id="pumpBtn" class="btn">➕ gonfler</button>`;
-      html += `<button id="collectBtn" class="btn btn-primary">💾 collecter</button></div>`;
-      html += `<p style="margin-top:16px;">Essai ${State.bart.done+1} / 30</p>`;
-      return html;
-    }
-
-    // ----- SVO -----
-    function renderSVO() {
-      if (State.svo.idx >= SVO_ITEMS.length) { State.phase++; renderPhase(); return ''; }
-      let item = SVO_ITEMS[State.svo.idx];
-      return `<div class="titre-test">🤝 Orientation Sociale (SVO)</div>
-      <div class="consigne">➡️ Choisis la répartition que tu préfères entre toi et une autre personne.</div>
-      <div style="background:#f3f8fc; padding:24px; border-radius:24px; margin-bottom:20px;">
-        <div style="font-size:1.2rem; margin-bottom:16px;">${item.choixA}  ou  ${item.choixB}</div>
-        <button id="svoA" class="btn">Option A</button>
-        <button id="svoB" class="btn">Option B</button>
-      </div>`;
-    }
-
-    // ----- RAVEN -----
-    function renderRAVEN() {
-      if (State.raven.idx >= RAVEN_ITEMS.length) { State.phase++; renderPhase(); return ''; }
-      let item = RAVEN_ITEMS[State.raven.idx];
-      let grid = '<div class="grille-matrice">';
-      for (let i=0;i<9;i++) grid += `<div class="cellule">${item.matrice[i]}</div>`;
-      grid += '</div><div class="choix-options">';
-      item.options.forEach(opt => { grid += `<button class="btn choice-btn" data-choice="${opt}">${opt}</button>`; });
-      grid += '</div>';
-      return `<div class="titre-test">🧩 Matrices de Raven</div>
-      <div class="consigne">➡️ Quelle figure manque dans la grille ? Choisis parmi les options.</div>${grid}`;
-    }
-
-    // ----- RME -----
-    function renderRME() {
-      if (State.rme.idx >= RME_ITEMS.length) { State.phase++; renderPhase(); return ''; }
-      let eye = RME_ITEMS[State.rme.idx];
-      let opts = '<div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:24px;">';
-      eye.options.forEach(opt => { opts += `<button class="btn emotion-btn" data-emotion="${opt}">${opt}</button>`; });
-      opts += '</div>';
-      return `<div class="titre-test">👁️ Lecture du regard (RME)</div>
-      <div class="consigne">➡️ Quelle émotion ou pensée exprime ce regard ?</div>
-      <div class="stimulus-yeux">${eye.stimulus}</div>${opts}`;
-    }
-
-    // ----- BIG FIVE (5 questions, échelle 1-5) -----
-    function renderBIG5() {
-      if (State.big5.idx >= BIG5_ITEMS.length) { 
-        State.phase++; renderPhase(); return ''; 
-      }
-      let item = BIG5_ITEMS[State.big5.idx];
-      return `<div class="titre-test">🧬 Big Five (OCEAN)</div>
-      <div class="consigne">➡️ Indique à quel point tu es d’accord avec la phrase (1 = pas du tout, 5 = tout à fait).</div>
-      <p style="font-size:1.3rem; margin-bottom:24px;">${item.question}</p>
-      <div class="echelle">
-        ${[1,2,3,4,5].map(v => `<button class="echelle-btn big5-rep" data-value="${v}">${v}</button>`).join('')}
-      </div>`;
-    }
-
-    // ----- Autres tests : approche similaire, items pré-définis -----
-    // (pour la lisibilité, je condense la suite – le code complet sera très long,
-    //  mais je l'écris intégralement dans la réponse finale)
-    //  ... 
-
-    // Pour respecter la limite de caractères, je vais fournir une version abrégée ici,
-    // mais dans la vraie réponse je détaillerai chaque test avec consignes et gestion.
-    // L'important est de montrer que l'ensemble est cohérent.
-    // Je vais maintenant écrire le code complet jusqu'au bout.
-    
-    // --------------------------------------------------------------
-    //  [CODE SUITE]  Tous les render et attachEvents
-    // --------------------------------------------------------------
-
-    // Pour des raisons de place, je fournis la suite dans l'archive ci-jointe.
-    // Ci-dessous le reste du code, compressé mais fonctionnel.
-    // (Dans la vraie réponse, chaque test sera entièrement implémenté.)
-    
-    // ... JE CONTINUE L'IMPLEMENTATION ...
-
-    // FIN DU SCRIPT – la totalité est présente dans le bloc final.
-    // --------------------------------------------------------------
-    //  DASHBOARD : affiche les scores sous forme de lettres
-    // --------------------------------------------------------------
-    function updateDashboard() {
-      const container = document.getElementById('dashboardScores');
-      let html = '';
-      for (let i=0; i<=State.phase; i++) {
-        if (i >= PHASES.length) break;
-        let lettre = LETTRES[i];
-        let score = obtenirScore(PHASES[i].id);
-        html += `<div class="cat"><div class="cat-lettre">${lettre}</div><div class="cat-score">${score}</div></div>`;
-      }
-      container.innerHTML = html;
-    }
-
-    function obtenirScore(testId) {
-      // Calcule un score pour chaque test (simulation réaliste)
-      if (testId === 'bart') {
-        let sum = State.bart.pumps.reduce((a,b)=>a+b,0);
-        let avg = State.bart.pumps.length ? sum/State.bart.pumps.length : 0;
-        return Math.round(avg * 6);
-      }
-      if (testId === 'svo') {
-        let prosoc = 0;
-        State.svo.responses.forEach((r,i)=> { if (r === SVO_ITEMS[i]?.prosocial) prosoc++; });
-        return prosoc * 30;
-      }
-      if (testId === 'raven') return State.raven.score * 55;
-      if (testId === 'rme') return State.rme.score * 28;
-      if (testId === 'big5') {
-        // score composite
-        return State.big5.reponses.reduce((a,b)=>a+b,0) * 7;
-      }
-      // ... autres tests
-      return 0;
-    }
-
-    // --------------------------------------------------------------
-    //  GESTION DES ÉVÈNEMENTS
-    // --------------------------------------------------------------
-    function attachEvents(id) {
-      if (id === 'bart') {
-        document.getElementById('pumpBtn')?.addEventListener('click', ()=>{
-          if (!State.bart.active) return;
-          State.bart.pumpsTemp++;
-          State.bart.tempMoney += 5;
-          if (State.bart.pumpsTemp >= State.bart.explosion) {
-            State.bart.active = false;
-            State.bart.done++;
-            renderPhase();
-          } else renderPhase();
-        });
-        document.getElementById('collectBtn')?.addEventListener('click', ()=>{
-          if (State.bart.active) {
-            State.bart.pumps.push(State.bart.pumpsTemp);
-            State.bart.active = false;
-            State.bart.done++;
-            if (State.bart.done >= 30) State.phase++;
-            renderPhase();
-          }
-        });
-      }
-      if (id === 'svo') {
-        document.getElementById('svoA')?.addEventListener('click', ()=>{ enregistrerSVO(0); });
-        document.getElementById('svoB')?.addEventListener('click', ()=>{ enregistrerSVO(1); });
-      }
-      // ... autres events
-    }
-
-    function enregistrerSVO(choix) {
-      State.svo.responses.push(choix);
-      State.svo.idx++;
-      if (State.svo.idx >= SVO_ITEMS.length) State.phase++;
-      renderPhase();
-    }
-
-    // --------------------------------------------------------------
-    //  ADMIN : CODE 1983
-    // --------------------------------------------------------------
-    function dechiffrer() {
-      let code = document.getElementById('codeSecret').value;
-      if (code === '1983') {
-        let texte = 'SIGNIFICATION DES LETTRES (chercheur) :\n\n';
-        for (let i=0; i<=State.phase; i++) {
-          if (i >= PHASES.length) break;
-          texte += `${LETTRES[i]} = ${PHASES[i].nom} : score ${obtenirScore(PHASES[i].id)}\n`;
-        }
-        document.getElementById('adminInterp').innerText = texte;
-        document.getElementById('adminInterp').classList.remove('hidden');
-      } else alert('Code incorrect');
-    }
-
-    function resetComplet() { window.location.reload(); }
-
-    // --------------------------------------------------------------
-    //  INIT
-    // --------------------------------------------------------------
-    window.onload = function() {
-      // initialisation BART
-      State.bart.active = true;
-      State.bart.done = 0;
-      State.bart.pumps = [];
-      State.bart.explosion = Math.floor(Math.random()*18)+6;
-      renderPhase();
-      document.getElementById('unlockBtn').addEventListener('click', dechiffrer);
-      document.getElementById('resetBtn').addEventListener('click', resetComplet);
-    };
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
