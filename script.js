@@ -1,5 +1,5 @@
 // script.js - VERSION CORRIGÉE SANS ERREURS
-
+<script src="script.js"></script>
 // ============================================
 // CONFIGURATION - TES CLÉS SUPABASE
 // ============================================
