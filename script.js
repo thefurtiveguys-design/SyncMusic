@@ -1,441 +1,394 @@
-// script.js - VERSION FINALE AVEC VRAI SPOTIFY
+// ============================================
+// SOUVENIR - Script principal
+// ============================================
 
-// ============================================
-// CONFIGURATION - TES CLÉS SUPABASE
-// ============================================
+// CONFIGURATION SUPABASE (TES CLÉS)
 const SUPABASE_URL = 'https://jtdhgrihatgqtphelmlx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZGhncmloYXRncXRwaGVsbWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDYxNjYsImV4cCI6MjA4NzE4MjE2Nn0.ieSj9GxVykIkACfyR8DfeAAqwAUq2UM5wRjSPJ5ONhE';
 
-// ============================================
-// INITIALISATION SUPABASE
-// ============================================
-console.log("🚀 Démarrage de l'application...");
+// CODE SECRET (À CHANGER - celui que tu veux)
+const SECRET_CODE = "SOUVENIR2026"; // Change-le !
 
-window.supabaseClient = null;
+// Initialisation Supabase
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-try {
-    window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log("✅ Supabase initialisé avec succès");
-} catch (error) {
-    console.error("❌ Erreur initialisation Supabase:", error);
-}
-
-// ============================================
-// VARIABLES GLOBALES
-// ============================================
-let currentSessionCode = null;
-let currentUserId = null;
-let isHost = false;
-let isPlaying = false;
-let spotifyPlayer = null;
-let subscription = null;
+// Variables globales
+let currentUser = null;
+let allSouvenirs = [];
+let currentMonth = new Date();
+let selectedDate = null;
+let photoFile = null;
 
 // ============================================
-// FONCTIONS UTILITAIRES
+// CONNEXION
 // ============================================
-function generateUserId() {
-    return 'user_' + Math.random().toString(36).substr(2, 9);
-}
-
-function generateSessionCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
+function checkCode() {
+    const code = document.getElementById('secret-code').value;
+    
+    if (code === SECRET_CODE) {
+        // Code bon - on connecte
+        currentUser = detectUser();
+        document.getElementById('current-user').textContent = 
+            currentUser === 'elle' ? 'C\'est toi 🌸' : 'C\'est toi ✨';
+        
+        // Afficher l'app
+        document.getElementById('login-screen').classList.remove('active');
+        document.getElementById('app-screen').classList.remove('hidden');
+        document.getElementById('app-screen').classList.add('active');
+        
+        // Charger les souvenirs
+        loadSouvenirs();
+        
+        // Synchronisation en temps réel
+        subscribeToSouvenirs();
+        
+        // Adapter la vue selon l'utilisateur
+        adaptViewForUser();
+    } else {
+        alert('❌ Code secret incorrect');
     }
-    return code;
 }
 
-// ============================================
-// GESTION DU TOKEN SPOTIFY
-// ============================================
-function handleSpotifyRedirect() {
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        const params = new URLSearchParams(hash);
-        const token = params.get('access_token');
-        if (token) {
-            console.log("✅ Token Spotify reçu");
-            localStorage.setItem('spotify_token', token);
-            window.history.replaceState({}, document.title, window.location.pathname);
-            
-            // Cacher le bouton de connexion
-            const spotifyBtn = document.getElementById('spotify-login-btn');
-            if (spotifyBtn) spotifyBtn.style.display = 'none';
-            
-            // Recharger le player pour utiliser le token
-            if (window.location.pathname.includes('player.html')) {
-                initPlayer();
-            }
-        }
+// Détecter si c'est elle (mobile) ou lui (ordinateur)
+function detectUser() {
+    const isMobile = window.innerWidth <= 768;
+    // Sur mobile => elle, sur ordi => lui
+    return isMobile ? 'elle' : 'lui';
+}
+
+// Adapter la vue selon l'utilisateur
+function adaptViewForUser() {
+    if (currentUser === 'elle') {
+        // Elle voit le fil par défaut
+        switchView('feed');
+        document.querySelector('.view-toggle').style.display = 'flex';
+    } else {
+        // Lui voit le calendrier par défaut
+        switchView('calendar');
+        document.querySelector('.view-toggle').style.display = 'none';
     }
 }
 
 // ============================================
-// CHARGER LE PLAYER SPOTIFY
+// CHANGEMENT DE VUE
 // ============================================
-function loadSpotifyPlayer(token) {
-    // Charger le SDK Spotify
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
-    script.async = true;
-    document.body.appendChild(script);
+function switchView(view) {
+    // Mettre à jour les boutons
+    document.getElementById('view-feed-btn').classList.toggle('active', view === 'feed');
+    document.getElementById('view-calendar-btn').classList.toggle('active', view === 'calendar');
     
-    window.onSpotifyWebPlaybackSDKReady = () => {
-        console.log("🎵 SDK Spotify prêt");
-        
-        spotifyPlayer = new Spotify.Player({
-            name: 'SyncMusic Player',
-            getOAuthToken: cb => { cb(token); },
-            volume: 0.5
-        });
-        
-        // Prêt à jouer
-        spotifyPlayer.addListener('ready', ({ device_id }) => {
-            console.log('✅ Player Spotify prêt avec device ID:', device_id);
-            localStorage.setItem('device_id', device_id);
-            
-            const statusEl = document.getElementById('player-status');
-            if (statusEl) {
-                statusEl.innerHTML = '✅ Connecté à Spotify - Prêt à jouer';
-            }
-        });
-        
-        // État du player changé
-        spotifyPlayer.addListener('player_state_changed', state => {
-            if (state) {
-                const track = state.track_window.current_track;
-                document.getElementById('track-name').textContent = track.name;
-                document.getElementById('artist-name').textContent = track.artists.map(a => a.name).join(', ');
-                
-                // Mettre à jour l'état play/pause
-                isPlaying = !state.paused;
-                const icon = document.getElementById('play-pause-icon');
-                if (icon) {
-                    icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-                }
-            }
-        });
-        
-        // Gérer les erreurs
-        spotifyPlayer.addListener('initialization_error', ({ message }) => {
-            console.error('❌ Erreur initialisation:', message);
-        });
-        
-        spotifyPlayer.addListener('authentication_error', ({ message }) => {
-            console.error('❌ Erreur authentification:', message);
-            localStorage.removeItem('spotify_token');
-            window.location.reload();
-        });
-        
-        spotifyPlayer.addListener('account_error', ({ message }) => {
-            console.error('❌ Erreur compte:', message);
-            alert('Erreur: Compte Spotify premium requis');
-        });
-        
-        spotifyPlayer.connect();
-    };
+    // Afficher la bonne vue
+    document.getElementById('feed-view').classList.toggle('active', view === 'feed');
+    document.getElementById('calendar-view').classList.toggle('active', view === 'calendar');
+    
+    if (view === 'calendar') {
+        renderCalendar();
+    }
 }
 
 // ============================================
-// FONCTIONS PRINCIPALES
+// CHARGEMENT DES SOUVENIRS
 // ============================================
-
-// CRÉER UNE SESSION
-window.createSession = async function() {
-    console.log("🟡 Création d'une nouvelle session");
-    
+async function loadSouvenirs() {
     try {
-        currentSessionCode = generateSessionCode();
-        currentUserId = generateUserId();
-        isHost = true;
+        const { data, error } = await supabase
+            .from('souvenirs')
+            .select('*')
+            .order('date', { ascending: false });
         
-        console.log("📝 Code session:", currentSessionCode);
-        console.log("👤 User ID:", currentUserId);
+        if (error) throw error;
         
-        // Sauvegarder
-        localStorage.setItem('sessionCode', currentSessionCode);
-        localStorage.setItem('userId', currentUserId);
-        localStorage.setItem('isHost', 'true');
-        
-        // Afficher l'écran d'attente
-        document.getElementById('home-screen').classList.add('hidden');
-        document.getElementById('waiting-screen').classList.remove('hidden');
-        document.getElementById('display-code').textContent = currentSessionCode;
-        
-        console.log("🎉 Session créée avec succès !");
-        
-        // Simulation d'un ami qui rejoint après 3 secondes
-        setTimeout(() => {
-            console.log("👤 Simulation d'un ami qui rejoint");
-            const friendStatus = document.getElementById('friend-status');
-            const waitingMessage = document.getElementById('waiting-message');
-            
-            if (friendStatus) {
-                friendStatus.classList.add('connected');
-                const nameEl = friendStatus.querySelector('.user-name');
-                if (nameEl) nameEl.textContent = 'Ami';
-            }
-            
-            if (waitingMessage) {
-                waitingMessage.innerHTML = '✅ Ami connecté ! Redirection...';
-            }
-            
-            setTimeout(() => {
-                window.location.href = 'player.html';
-            }, 1500);
-        }, 3000);
+        allSouvenirs = data || [];
+        renderFeed();
+        renderCalendar();
         
     } catch (error) {
-        console.error("❌ Erreur:", error);
-        alert("Erreur: " + error.message);
+        console.error('Erreur chargement:', error);
+        document.getElementById('souvenirs-feed').innerHTML = 
+            '<div class="loading">Erreur de chargement</div>';
     }
-};
+}
 
-// REJOINDRE UNE SESSION
-window.joinSession = function() {
-    console.log("🟡 Tentative de rejoindre une session");
+// ============================================
+// AFFICHAGE DU FIL
+// ============================================
+function renderFeed() {
+    const feed = document.getElementById('souvenirs-feed');
     
-    try {
-        const codeInput = document.getElementById('session-code');
-        const code = codeInput.value.toUpperCase();
-        
-        if (code.length !== 6) {
-            alert('Veuillez entrer un code valide de 6 caractères');
-            return;
-        }
-        
-        console.log("📝 Code entré:", code);
-        
-        currentSessionCode = code;
-        currentUserId = generateUserId();
-        
-        // Sauvegarder
-        localStorage.setItem('sessionCode', currentSessionCode);
-        localStorage.setItem('userId', currentUserId);
-        localStorage.setItem('isHost', 'false');
-        
-        console.log("➡️ Redirection vers player.html");
-        window.location.href = 'player.html';
-        
-    } catch (error) {
-        console.error("❌ Erreur:", error);
-        alert("Erreur: " + error.message);
-    }
-};
-
-// COPIER LE CODE
-window.copyCode = function() {
-    const code = document.getElementById('display-code').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        alert('Code copié !');
-    });
-};
-
-// INITIALISER LE PLAYER (VERSION REELLE)
-function initPlayer() {
-    console.log("🎵 Initialisation du player");
-    
-    currentSessionCode = localStorage.getItem('sessionCode');
-    currentUserId = localStorage.getItem('userId');
-    isHost = localStorage.getItem('isHost') === 'true';
-    
-    console.log("Session:", currentSessionCode);
-    console.log("User:", currentUserId);
-    console.log("Host:", isHost);
-    
-    if (!currentSessionCode || !currentUserId) {
-        console.log("❌ Pas de session, redirection");
-        window.location.href = 'index.html';
+    if (allSouvenirs.length === 0) {
+        feed.innerHTML = `
+            <div class="loading">
+                <i class="fas fa-heart" style="font-size: 40px; color: #ff6b9d; margin-bottom: 20px;"></i>
+                <p>Pas encore de souvenirs</p>
+                <p style="font-size: 14px;">Ajoutez votre premier moment ❤️</p>
+            </div>
+        `;
         return;
     }
     
-    // Afficher le code
-    const codeEl = document.getElementById('current-session-code');
-    if (codeEl) codeEl.textContent = currentSessionCode;
+    feed.innerHTML = allSouvenirs.map(souvenir => `
+        <div class="souvenir-card">
+            ${souvenir.photo_url ? `
+                <img src="${souvenir.photo_url}" class="souvenir-photo" alt="Souvenir">
+            ` : ''}
+            <div class="souvenir-content">
+                <div class="souvenir-header">
+                    <span class="souvenir-date">${formatDate(souvenir.date)}</span>
+                    <span class="souvenir-emotion">${souvenir.emotion || '❤️'}</span>
+                </div>
+                <p class="souvenir-text">${souvenir.texte}</p>
+                <div class="souvenir-author">
+                    ${souvenir.auteur === 'elle' ? '🌸 Elle' : 
+                      souvenir.auteur === 'lui' ? '✨ Lui' : '💑 Nous deux'}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ============================================
+// CALENDRIER
+// ============================================
+function renderCalendar() {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
     
-    // Mettre à jour les noms
-    const user1Name = document.getElementById('user1-name');
-    const user2Name = document.getElementById('user2-name');
-    const friendStatus = document.getElementById('friend-player-status');
+    // Mettre à jour le titre
+    const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    document.getElementById('current-month').textContent = 
+        `${monthNames[month]} ${year}`;
     
-    if (user1Name) {
-        user1Name.textContent = isHost ? 'Vous (hôte)' : 'Hôte';
+    // Premier jour du mois
+    const firstDay = new Date(year, month, 1);
+    const startDay = firstDay.getDay(); // 0 = dimanche, 1 = lundi...
+    
+    // Convertir pour commencer le lundi
+    let startOffset = startDay === 0 ? 6 : startDay - 1;
+    
+    // Nombre de jours dans le mois
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    // Générer la grille
+    let html = '';
+    
+    // En-têtes des jours
+    const dayHeaders = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    dayHeaders.forEach(day => {
+        html += `<div class="calendar-day-header">${day}</div>`;
+    });
+    
+    // Cases vides avant le premier jour
+    for (let i = 0; i < startOffset; i++) {
+        html += `<div class="calendar-day empty"></div>`;
     }
     
-    if (user2Name) {
-        user2Name.textContent = isHost ? 'Ami' : 'Vous';
+    // Jours du mois
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const hasSouvenir = allSouvenirs.some(s => s.date === dateStr);
+        const isSelected = selectedDate === dateStr;
+        
+        html += `
+            <div class="calendar-day ${hasSouvenir ? 'has-souvenir' : ''} ${isSelected ? 'selected' : ''}"
+                 onclick="selectDate('${dateStr}')">
+                ${day}
+            </div>
+        `;
     }
     
-    // Vérifier si on a un token Spotify
-    const token = localStorage.getItem('spotify_token');
-    const spotifyBtn = document.getElementById('spotify-login-btn');
-    const statusEl = document.getElementById('player-status');
+    document.getElementById('calendar-grid').innerHTML = html;
     
-    if (token && token !== 'fake_token') {
-        // VRAI token Spotify
-        if (spotifyBtn) spotifyBtn.style.display = 'none';
-        if (statusEl) {
-            statusEl.innerHTML = '✅ Connecté à Spotify - Chargement...';
-        }
-        
-        // Charger le player Spotify
-        loadSpotifyPlayer(token);
-        
-        // Simuler l'ami (à remplacer par de la vraie synchro plus tard)
-        setTimeout(() => {
-            if (friendStatus) friendStatus.classList.add('connected');
-            if (statusEl) statusEl.innerHTML = '✅ Connecté à Spotify - Ami présent';
-        }, 2000);
-        
-    } else {
-        // Pas de token, on affiche le bouton
-        if (spotifyBtn) spotifyBtn.style.display = 'block';
-        if (statusEl) {
-            statusEl.innerHTML = '🔑 Connectez-vous à Spotify pour commencer';
-        }
-        
-        // Simuler quand même l'ami pour l'interface
-        setTimeout(() => {
-            if (friendStatus) friendStatus.classList.add('connected');
-        }, 2000);
+    // Si une date est sélectionnée, afficher ses souvenirs
+    if (selectedDate) {
+        showSouvenirsForDate(selectedDate);
     }
 }
 
-// ENVOYER UNE COMMANDE (VERSION REELLE)
-window.sendCommand = function(command) {
-    console.log("📤 Commande:", command);
-    
-    const token = localStorage.getItem('spotify_token');
-    const statusEl = document.getElementById('player-status');
-    
-    // Traduire les commandes pour l'API Spotify
-    let spotifyCommand = command;
-    if (command === 'next') spotifyCommand = 'next';
-    if (command === 'previous') spotifyCommand = 'previous';
-    
-    if (token && token !== 'fake_token') {
-        // VRAI contrôle Spotify
-        let url = `https://api.spotify.com/v1/me/player/${spotifyCommand}`;
-        
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => {
-            if (response.status === 204 || response.status === 200) {
-                console.log("✅ Commande Spotify exécutée");
-                if (statusEl) {
-                    statusEl.innerHTML = `🎵 Commande "${command}" exécutée`;
-                    setTimeout(() => {
-                        statusEl.innerHTML = '✅ Connecté à Spotify - Ami présent';
-                    }, 1000);
-                }
-            } else {
-                console.log("⚠️ Réponse Spotify:", response.status);
-            }
-        }).catch(error => {
-            console.error("❌ Erreur Spotify:", error);
-        });
-        
-        // Mettre à jour l'icône si play/pause
-        if (command === 'play' || command === 'pause') {
-            isPlaying = (command === 'play');
-            const icon = document.getElementById('play-pause-icon');
-            if (icon) {
-                icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-            }
-            
-            // Pour play/pause, c'est une commande spéciale
-            if (command === 'play') {
-                fetch('https://api.spotify.com/v1/me/player/play', {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }).catch(e => console.error(e));
-            } else if (command === 'pause') {
-                fetch('https://api.spotify.com/v1/me/player/pause', {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                }).catch(e => console.error(e));
-            }
-        }
-        
-    } else {
-        // Mode simulation (si pas connecté à Spotify)
-        console.log("🎮 Mode simulation");
-        
-        if (command === 'play' || command === 'pause') {
-            isPlaying = (command === 'play');
-            const icon = document.getElementById('play-pause-icon');
-            if (icon) {
-                icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-            }
-        }
-        
-        if (statusEl) {
-            statusEl.innerHTML = `📨 Commande "${command}" (simulation)`;
-            setTimeout(() => {
-                statusEl.innerHTML = '✅ Connecté - Ami présent';
-            }, 1000);
-        }
-    }
-};
+function changeMonth(delta) {
+    currentMonth.setMonth(currentMonth.getMonth() + delta);
+    renderCalendar();
+}
 
-// BASCOLER PLAY/PAUSE
-window.togglePlay = function() {
-    window.sendCommand(isPlaying ? 'pause' : 'play');
-};
+function selectDate(dateStr) {
+    selectedDate = dateStr;
+    showSouvenirsForDate(dateStr);
+    renderCalendar(); // Pour mettre à jour la classe selected
+}
 
-// QUITTER LA SESSION
-window.leaveSession = function() {
-    console.log("👋 Départ de la session");
+function showSouvenirsForDate(dateStr) {
+    const souvenirs = allSouvenirs.filter(s => s.date === dateStr);
+    const container = document.getElementById('selected-day-souvenirs');
     
-    // Déconnecter le player Spotify si existant
-    if (spotifyPlayer) {
-        spotifyPlayer.disconnect();
+    if (souvenirs.length === 0) {
+        container.innerHTML = `
+            <h4>${formatDate(dateStr)}</h4>
+            <p style="color: #888; text-align: center; padding: 20px;">
+                Aucun souvenir ce jour-là
+            </p>
+        `;
+        return;
     }
     
-    localStorage.clear();
-    window.location.href = 'index.html';
-};
-
-// CONNEXION SPOTIFY
-window.loginToSpotify = function() {
-    const CLIENT_ID = '5e4dd6c210704b818d808f4fdf6da45d';
-    const REDIRECT_URI = window.location.origin + '/player.html';
-    
-    const scopes = [
-        'streaming',
-        'user-read-email',
-        'user-read-private',
-        'user-modify-playback-state',
-        'user-read-playback-state',
-        'user-read-currently-playing'
-    ];
-    
-    const authUrl = 'https://accounts.spotify.com/authorize' +
-        '?client_id=' + CLIENT_ID +
-        '&response_type=token' +
-        '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
-        '&scope=' + encodeURIComponent(scopes.join(' ')) +
-        '&show_dialog=true';
-    
-    window.location.href = authUrl;
-};
+    container.innerHTML = `
+        <h4>${formatDate(dateStr)}</h4>
+        ${souvenirs.map(s => `
+            <div class="souvenir-mini-card">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>${s.emotion || '❤️'}</span>
+                    <small>${s.auteur === 'elle' ? '🌸' : s.auteur === 'lui' ? '✨' : '💑'}</small>
+                </div>
+                <p>${s.texte}</p>
+            </div>
+        `).join('')}
+    `;
+}
 
 // ============================================
-// INITIALISATION AU CHARGEMENT
+// AJOUT DE SOUVENIR
+// ============================================
+function showAddSouvenir() {
+    // Mettre la date du jour par défaut
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('souvenir-date').value = today;
+    
+    // Reset photo
+    photoFile = null;
+    document.getElementById('photo-preview').innerHTML = `
+        <i class="fas fa-camera"></i>
+        <span>Ajouter une photo</span>
+    `;
+    
+    document.getElementById('souvenir-modal').classList.remove('hidden');
+}
+
+function hideModal() {
+    document.getElementById('souvenir-modal').classList.add('hidden');
+}
+
+// Gestion de la photo
+document.getElementById('photo-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        photoFile = file;
+        
+        // Aperçu
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('photo-preview').innerHTML = 
+                `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+async function saveSouvenir() {
+    const text = document.getElementById('souvenir-text').value;
+    const date = document.getElementById('souvenir-date').value;
+    const emotion = document.getElementById('souvenir-emotion').value;
+    const author = document.querySelector('input[name="author"]:checked').value;
+    
+    if (!text) {
+        alert('Écris ton souvenir !');
+        return;
+    }
+    
+    try {
+        let photoUrl = null;
+        
+        // Upload photo si existante
+        if (photoFile) {
+            const fileName = `${Date.now()}_${photoFile.name}`;
+            const { data, error } = await supabase.storage
+                .from('souvenirs-photos')
+                .upload(fileName, photoFile);
+            
+            if (!error) {
+                const { data: urlData } = supabase.storage
+                    .from('souvenirs-photos')
+                    .getPublicUrl(fileName);
+                photoUrl = urlData.publicUrl;
+            }
+        }
+        
+        // Sauvegarder le souvenir
+        const { error } = await supabase
+            .from('souvenirs')
+            .insert([{
+                texte: text,
+                date: date,
+                emotion: emotion,
+                auteur: author,
+                photo_url: photoUrl
+            }]);
+        
+        if (error) throw error;
+        
+        hideModal();
+        // Le souvenir apparaîtra via la souscription
+        
+    } catch (error) {
+        console.error('Erreur sauvegarde:', error);
+        alert('Erreur : ' + error.message);
+    }
+}
+
+// ============================================
+// SYNCHRONISATION EN TEMPS RÉEL
+// ============================================
+function subscribeToSouvenirs() {
+    supabase
+        .channel('souvenirs_channel')
+        .on('postgres_changes', 
+            { event: '*', schema: 'public', table: 'souvenirs' },
+            () => {
+                // Recharger les souvenirs
+                loadSouvenirs();
+                
+                // Notification subtile
+                if (document.hidden) {
+                    document.title = '❤️ Nouveau souvenir !';
+                    setTimeout(() => {
+                        document.title = 'SOUVENIR';
+                    }, 2000);
+                }
+            }
+        )
+        .subscribe();
+}
+
+// ============================================
+// UTILITAIRES
+// ============================================
+function formatDate(dateStr) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-FR', options);
+}
+
+function logout() {
+    localStorage.clear();
+    document.getElementById('app-screen').classList.remove('active');
+    document.getElementById('app-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.add('active');
+    document.getElementById('secret-code').value = '';
+}
+
+// ============================================
+// INITIALISATION
 // ============================================
 window.onload = function() {
-    console.log("📱 Page chargée");
-    
-    // Gérer le retour de Spotify
-    handleSpotifyRedirect();
-    
-    if (window.location.pathname.includes('player.html')) {
-        initPlayer();
-    }
+    console.log('❤️ SOUVENIR - Prêt');
 };
 
-console.log("✅ Script chargé - Mode RÉEL (plus de simulation)");
+// Adaptation au resize (pour détecter mobile/ordi)
+window.addEventListener('resize', () => {
+    if (document.getElementById('app-screen').classList.contains('active')) {
+        const newUser = detectUser();
+        if (newUser !== currentUser) {
+            currentUser = newUser;
+            document.getElementById('current-user').textContent = 
+                currentUser === 'elle' ? 'C\'est toi 🌸' : 'C\'est toi ✨';
+            adaptViewForUser();
+        }
+    }
+});
