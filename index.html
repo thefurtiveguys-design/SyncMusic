@@ -11,8 +11,7 @@
 <body>
     <!-- ÉCRAN DE CONNEXION -->
     <div id="login-screen" class="screen active">
-        <div class="container login-container">
-            <div class="heart-icon">❤️</div>
+        <div class="login-container">
             <h1>SOUVENIR</h1>
             <p class="subtitle">Notre histoire, nos moments</p>
             
@@ -28,10 +27,10 @@
 
     <!-- APPLICATION PRINCIPALE -->
     <div id="app-screen" class="screen hidden">
-        <!-- Header mobile & desktop -->
+        <!-- Header -->
         <header>
             <div class="header-content">
-                <h2>SOUVENIR <span class="heart">❤️</span></h2>
+                <h2>SOUVENIR</h2>
                 <div class="user-info">
                     <span id="current-user"></span>
                     <button class="btn-icon" onclick="logout()" title="Se déconnecter">
@@ -52,7 +51,7 @@
         </header>
 
         <main>
-            <!-- VUE FIL (mobile/elle) -->
+            <!-- VUE FIL -->
             <div id="feed-view" class="view active">
                 <div class="feed-header">
                     <button class="btn-add" onclick="showAddSouvenir()">
@@ -61,12 +60,11 @@
                 </div>
                 
                 <div id="souvenirs-feed" class="souvenirs-feed">
-                    <!-- Les souvenirs seront chargés ici -->
                     <div class="loading">Chargement de nos souvenirs...</div>
                 </div>
             </div>
 
-            <!-- VUE CALENDRIER (ordinateur/vous) -->
+            <!-- VUE CALENDRIER -->
             <div id="calendar-view" class="view hidden">
                 <div class="calendar-header">
                     <button class="btn-month" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -74,9 +72,7 @@
                     <button class="btn-month" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
                 
-                <div class="calendar-grid" id="calendar-grid">
-                    <!-- Les jours seront générés ici -->
-                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
                 
                 <div class="selected-day-souvenirs" id="selected-day-souvenirs">
                     <h4>Cliquez sur un jour</h4>
@@ -84,7 +80,7 @@
             </div>
         </main>
 
-        <!-- MODAL D'AJOUT DE SOUVENIR -->
+        <!-- MODAL D'AJOUT -->
         <div id="souvenir-modal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
@@ -96,7 +92,7 @@
                     <div class="form-group">
                         <label>Photo (optionnelle)</label>
                         <div class="photo-upload">
-                            <input type="file" id="photo-input" accept="image/*" capture="environment">
+                            <input type="file" id="photo-input" accept="image/*">
                             <div class="photo-preview" id="photo-preview" onclick="document.getElementById('photo-input').click()">
                                 <i class="fas fa-camera"></i>
                                 <span>Ajouter une photo</span>
