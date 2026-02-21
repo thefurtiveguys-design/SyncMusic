@@ -231,11 +231,26 @@ window.leaveSession = function() {
 
 // CONNEXION SPOTIFY
 window.loginToSpotify = function() {
-    alert("Pour utiliser Spotify, chaque personne doit d'abord se connecter sur spotify.com");
-    // On désactive temporairement la redirection Spotify
-    localStorage.setItem('spotify_token', 'fake_token');
-    document.getElementById('spotify-login-btn').style.display = 'none';
-    document.getElementById('player-status').innerHTML = '✅ Mode démo - Spotify simulé';
+    const CLIENT_ID = '5e4dd6c210704b818d808f4fdf6da45d';
+    const REDIRECT_URI = window.location.origin + '/player.html';
+    
+    const scopes = [
+        'streaming',
+        'user-read-email',
+        'user-read-private',
+        'user-modify-playback-state',
+        'user-read-playback-state',
+        'user-read-currently-playing'
+    ];
+    
+    const authUrl = 'https://accounts.spotify.com/authorize' +
+        '?client_id=' + CLIENT_ID +
+        '&response_type=token' +
+        '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
+        '&scope=' + encodeURIComponent(scopes.join(' ')) +
+        '&show_dialog=true';
+    
+    window.location.href = authUrl;
 };
 
 // ============================================
