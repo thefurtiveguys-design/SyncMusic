@@ -229,11 +229,13 @@ window.leaveSession = function() {
     window.location.href = 'index.html';
 };
 
-// CONNEXION SPOTIFY (placeholder)
+// CONNEXION SPOTIFY
 window.loginToSpotify = function() {
-    alert("Configuration Spotify à venir ! Pour l'instant, on simule.");
+    alert("Pour utiliser Spotify, chaque personne doit d'abord se connecter sur spotify.com");
+    // On désactive temporairement la redirection Spotify
     localStorage.setItem('spotify_token', 'fake_token');
     document.getElementById('spotify-login-btn').style.display = 'none';
+    document.getElementById('player-status').innerHTML = '✅ Mode démo - Spotify simulé';
 };
 
 // ============================================
