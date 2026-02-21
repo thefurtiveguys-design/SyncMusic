@@ -589,3 +589,15 @@ input:focus, textarea:focus, select:focus {
         font-size: 12px;
     }
 }
+
+/* Ajoute ça à la fin du fichier style.css */
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+}
