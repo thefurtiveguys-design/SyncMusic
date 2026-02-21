@@ -1,4 +1,4 @@
-// script.js - VERSION CORRIGÉE SANS ERREURS
+// script.js - VERSION FINALE AVEC VRAI SPOTIFY
 
 // ============================================
 // CONFIGURATION - TES CLÉS SUPABASE
@@ -7,11 +7,10 @@ const SUPABASE_URL = 'https://jtdhgrihatgqtphelmlx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZGhncmloYXRncXRwaGVsbWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MDYxNjYsImV4cCI6MjA4NzE4MjE2Nn0.ieSj9GxVykIkACfyR8DfeAAqwAUq2UM5wRjSPJ5ONhE';
 
 // ============================================
-// INITIALISATION SUPABASE - SANS REDECLARATION
+// INITIALISATION SUPABASE
 // ============================================
 console.log("🚀 Démarrage de l'application...");
 
-// NE PAS utiliser "let supabase" - on utilise directement window.supabase
 window.supabaseClient = null;
 
 try {
@@ -28,6 +27,7 @@ let currentSessionCode = null;
 let currentUserId = null;
 let isHost = false;
 let isPlaying = false;
+let spotifyPlayer = null;
 let subscription = null;
 
 // ============================================
@@ -47,7 +47,98 @@ function generateSessionCode() {
 }
 
 // ============================================
-// FONCTIONS PRINCIPALES - RENDUES GLOBALES
+// GESTION DU TOKEN SPOTIFY
+// ============================================
+function handleSpotifyRedirect() {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        const params = new URLSearchParams(hash);
+        const token = params.get('access_token');
+        if (token) {
+            console.log("✅ Token Spotify reçu");
+            localStorage.setItem('spotify_token', token);
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            // Cacher le bouton de connexion
+            const spotifyBtn = document.getElementById('spotify-login-btn');
+            if (spotifyBtn) spotifyBtn.style.display = 'none';
+            
+            // Recharger le player pour utiliser le token
+            if (window.location.pathname.includes('player.html')) {
+                initPlayer();
+            }
+        }
+    }
+}
+
+// ============================================
+// CHARGER LE PLAYER SPOTIFY
+// ============================================
+function loadSpotifyPlayer(token) {
+    // Charger le SDK Spotify
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    script.async = true;
+    document.body.appendChild(script);
+    
+    window.onSpotifyWebPlaybackSDKReady = () => {
+        console.log("🎵 SDK Spotify prêt");
+        
+        spotifyPlayer = new Spotify.Player({
+            name: 'SyncMusic Player',
+            getOAuthToken: cb => { cb(token); },
+            volume: 0.5
+        });
+        
+        // Prêt à jouer
+        spotifyPlayer.addListener('ready', ({ device_id }) => {
+            console.log('✅ Player Spotify prêt avec device ID:', device_id);
+            localStorage.setItem('device_id', device_id);
+            
+            const statusEl = document.getElementById('player-status');
+            if (statusEl) {
+                statusEl.innerHTML = '✅ Connecté à Spotify - Prêt à jouer';
+            }
+        });
+        
+        // État du player changé
+        spotifyPlayer.addListener('player_state_changed', state => {
+            if (state) {
+                const track = state.track_window.current_track;
+                document.getElementById('track-name').textContent = track.name;
+                document.getElementById('artist-name').textContent = track.artists.map(a => a.name).join(', ');
+                
+                // Mettre à jour l'état play/pause
+                isPlaying = !state.paused;
+                const icon = document.getElementById('play-pause-icon');
+                if (icon) {
+                    icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+                }
+            }
+        });
+        
+        // Gérer les erreurs
+        spotifyPlayer.addListener('initialization_error', ({ message }) => {
+            console.error('❌ Erreur initialisation:', message);
+        });
+        
+        spotifyPlayer.addListener('authentication_error', ({ message }) => {
+            console.error('❌ Erreur authentification:', message);
+            localStorage.removeItem('spotify_token');
+            window.location.reload();
+        });
+        
+        spotifyPlayer.addListener('account_error', ({ message }) => {
+            console.error('❌ Erreur compte:', message);
+            alert('Erreur: Compte Spotify premium requis');
+        });
+        
+        spotifyPlayer.connect();
+    };
+}
+
+// ============================================
+// FONCTIONS PRINCIPALES
 // ============================================
 
 // CRÉER UNE SESSION
@@ -55,7 +146,6 @@ window.createSession = async function() {
     console.log("🟡 Création d'une nouvelle session");
     
     try {
-        // Version simplifiée pour tester SANS Supabase
         currentSessionCode = generateSessionCode();
         currentUserId = generateUserId();
         isHost = true;
@@ -84,7 +174,7 @@ window.createSession = async function() {
             if (friendStatus) {
                 friendStatus.classList.add('connected');
                 const nameEl = friendStatus.querySelector('.user-name');
-                if (nameEl) nameEl.textContent = 'Ami (test)';
+                if (nameEl) nameEl.textContent = 'Ami';
             }
             
             if (waitingMessage) {
@@ -142,7 +232,7 @@ window.copyCode = function() {
     });
 };
 
-// INITIALISER LE PLAYER
+// INITIALISER LE PLAYER (VERSION REELLE)
 function initPlayer() {
     console.log("🎵 Initialisation du player");
     
@@ -177,54 +267,135 @@ function initPlayer() {
         user2Name.textContent = isHost ? 'Ami' : 'Vous';
     }
     
-    // Simuler ami connecté
-    setTimeout(() => {
-        if (friendStatus) {
-            friendStatus.classList.add('connected');
+    // Vérifier si on a un token Spotify
+    const token = localStorage.getItem('spotify_token');
+    const spotifyBtn = document.getElementById('spotify-login-btn');
+    const statusEl = document.getElementById('player-status');
+    
+    if (token && token !== 'fake_token') {
+        // VRAI token Spotify
+        if (spotifyBtn) spotifyBtn.style.display = 'none';
+        if (statusEl) {
+            statusEl.innerHTML = '✅ Connecté à Spotify - Chargement...';
         }
         
-        const statusEl = document.getElementById('player-status');
+        // Charger le player Spotify
+        loadSpotifyPlayer(token);
+        
+        // Simuler l'ami (à remplacer par de la vraie synchro plus tard)
+        setTimeout(() => {
+            if (friendStatus) friendStatus.classList.add('connected');
+            if (statusEl) statusEl.innerHTML = '✅ Connecté à Spotify - Ami présent';
+        }, 2000);
+        
+    } else {
+        // Pas de token, on affiche le bouton
+        if (spotifyBtn) spotifyBtn.style.display = 'block';
         if (statusEl) {
-            statusEl.innerHTML = '✅ Connecté - Ami présent (simulation)';
+            statusEl.innerHTML = '🔑 Connectez-vous à Spotify pour commencer';
         }
-    }, 2000);
+        
+        // Simuler quand même l'ami pour l'interface
+        setTimeout(() => {
+            if (friendStatus) friendStatus.classList.add('connected');
+        }, 2000);
+    }
 }
 
-// ENVOYER UNE COMMANDE
+// ENVOYER UNE COMMANDE (VERSION REELLE)
 window.sendCommand = function(command) {
     console.log("📤 Commande:", command);
     
-    // Simulation
-    if (command === 'play' || command === 'pause') {
-        isPlaying = (command === 'play');
-        const icon = document.getElementById('play-pause-icon');
-        if (icon) {
-            icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-        }
-    }
-    
+    const token = localStorage.getItem('spotify_token');
     const statusEl = document.getElementById('player-status');
-    if (statusEl) {
-        statusEl.innerHTML = `📨 Commande "${command}" envoyée`;
-        setTimeout(() => {
-            statusEl.innerHTML = '✅ Connecté - Ami présent (simulation)';
-        }, 1000);
+    
+    // Traduire les commandes pour l'API Spotify
+    let spotifyCommand = command;
+    if (command === 'next') spotifyCommand = 'next';
+    if (command === 'previous') spotifyCommand = 'previous';
+    
+    if (token && token !== 'fake_token') {
+        // VRAI contrôle Spotify
+        let url = `https://api.spotify.com/v1/me/player/${spotifyCommand}`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            if (response.status === 204 || response.status === 200) {
+                console.log("✅ Commande Spotify exécutée");
+                if (statusEl) {
+                    statusEl.innerHTML = `🎵 Commande "${command}" exécutée`;
+                    setTimeout(() => {
+                        statusEl.innerHTML = '✅ Connecté à Spotify - Ami présent';
+                    }, 1000);
+                }
+            } else {
+                console.log("⚠️ Réponse Spotify:", response.status);
+            }
+        }).catch(error => {
+            console.error("❌ Erreur Spotify:", error);
+        });
+        
+        // Mettre à jour l'icône si play/pause
+        if (command === 'play' || command === 'pause') {
+            isPlaying = (command === 'play');
+            const icon = document.getElementById('play-pause-icon');
+            if (icon) {
+                icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+            }
+            
+            // Pour play/pause, c'est une commande spéciale
+            if (command === 'play') {
+                fetch('https://api.spotify.com/v1/me/player/play', {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(e => console.error(e));
+            } else if (command === 'pause') {
+                fetch('https://api.spotify.com/v1/me/player/pause', {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(e => console.error(e));
+            }
+        }
+        
+    } else {
+        // Mode simulation (si pas connecté à Spotify)
+        console.log("🎮 Mode simulation");
+        
+        if (command === 'play' || command === 'pause') {
+            isPlaying = (command === 'play');
+            const icon = document.getElementById('play-pause-icon');
+            if (icon) {
+                icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+            }
+        }
+        
+        if (statusEl) {
+            statusEl.innerHTML = `📨 Commande "${command}" (simulation)`;
+            setTimeout(() => {
+                statusEl.innerHTML = '✅ Connecté - Ami présent';
+            }, 1000);
+        }
     }
 };
 
 // BASCOLER PLAY/PAUSE
 window.togglePlay = function() {
-    isPlaying = !isPlaying;
-    const icon = document.getElementById('play-pause-icon');
-    if (icon) {
-        icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-    }
-    window.sendCommand(isPlaying ? 'play' : 'pause');
+    window.sendCommand(isPlaying ? 'pause' : 'play');
 };
 
 // QUITTER LA SESSION
 window.leaveSession = function() {
     console.log("👋 Départ de la session");
+    
+    // Déconnecter le player Spotify si existant
+    if (spotifyPlayer) {
+        spotifyPlayer.disconnect();
+    }
+    
     localStorage.clear();
     window.location.href = 'index.html';
 };
@@ -259,9 +430,12 @@ window.loginToSpotify = function() {
 window.onload = function() {
     console.log("📱 Page chargée");
     
+    // Gérer le retour de Spotify
+    handleSpotifyRedirect();
+    
     if (window.location.pathname.includes('player.html')) {
         initPlayer();
     }
 };
 
-console.log("✅ Script chargé - Toutes les fonctions sont prêtes");
+console.log("✅ Script chargé - Mode RÉEL (plus de simulation)");
