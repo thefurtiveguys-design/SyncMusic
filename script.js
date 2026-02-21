@@ -1,5 +1,5 @@
 // ============================================
-// SOUVENIR - Version finale
+// SOUVENIR - Version finale avec logs
 // ============================================
 
 console.log("🚀 DÉMARRAGE");
@@ -21,6 +21,7 @@ let photoFile = null;
 // CONNEXION
 // ============================================
 window.checkCode = function() {
+    console.log("🔑 Tentative de connexion");
     const code = document.getElementById('secret-code').value;
     if (code === SECRET_CODE) {
         currentUser = window.innerWidth <= 768 ? 'elle' : 'lui';
@@ -31,6 +32,7 @@ window.checkCode = function() {
         document.getElementById('app-screen').classList.remove('hidden');
         document.getElementById('app-screen').classList.add('active');
         
+        console.log("Connexion réussie, chargement des souvenirs...");
         loadSouvenirs();
         subscribeToSouvenirs();
         
@@ -50,6 +52,7 @@ window.checkCode = function() {
 // CHANGEMENT DE VUE
 // ============================================
 window.switchView = function(view) {
+    console.log("Changement de vue vers:", view);
     document.getElementById('view-feed-btn')?.classList.toggle('active', view === 'feed');
     document.getElementById('view-calendar-btn')?.classList.toggle('active', view === 'calendar');
     document.getElementById('feed-view')?.classList.toggle('active', view === 'feed');
@@ -62,6 +65,7 @@ window.switchView = function(view) {
 // CHARGEMENT DES SOUVENIRS
 // ============================================
 async function loadSouvenirs() {
+    console.log("📥 Chargement des souvenirs...");
     try {
         const { data, error } = await supabaseClient
             .from('souvenirs')
@@ -70,11 +74,14 @@ async function loadSouvenirs() {
         
         if (error) throw error;
         
+        console.log("✅ Souvenirs reçus:", data);
         allSouvenirs = data || [];
         renderFeed();
         renderCalendar();
     } catch (error) {
-        console.error('Erreur:', error);
+        console.error('❌ Erreur chargement:', error);
+        document.getElementById('souvenirs-feed').innerHTML = 
+            `<div class="loading">Erreur: ${error.message}</div>`;
     }
 }
 
@@ -83,12 +90,15 @@ async function loadSouvenirs() {
 // ============================================
 function renderFeed() {
     const feed = document.getElementById('souvenirs-feed');
-    if (!feed) return;
+    if (!feed) {
+        console.error("Élément feed introuvable");
+        return;
+    }
     
     if (allSouvenirs.length === 0) {
         feed.innerHTML = `
             <div class="empty-state">
-                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart" style="font-size: 48px; color: #ff6b9d;"></i>
                 <h3>Pas encore de souvenirs</h3>
                 <p>Ajoutez votre premier moment</p>
                 <button class="btn-primary" onclick="showAddSouvenir()" style="margin-top: 20px; width: auto; padding: 10px 30px;">
@@ -114,6 +124,7 @@ function renderFeed() {
             </div>
         </div>
     `).join('');
+    console.log("Feed mis à jour avec", allSouvenirs.length, "souvenirs");
 }
 
 // ============================================
@@ -179,7 +190,7 @@ function showSouvenirsForDate(dateStr) {
         container.innerHTML = `
             <h4>${formatDate(dateStr)}</h4>
             <div style="text-align: center; padding: 30px;">
-                <p style="color: var(--text-secondary);">Aucun souvenir ce jour-là</p>
+                <p style="color: #888;">Aucun souvenir ce jour-là</p>
                 <button class="btn-primary" onclick="showAddSouvenirWithDate('${dateStr}')" style="margin-top: 15px; width: auto; padding: 10px 20px;">
                     <i class="fas fa-plus"></i> Ajouter
                 </button>
@@ -194,10 +205,10 @@ function showSouvenirsForDate(dateStr) {
             <div class="souvenir-mini-card">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                     <span>${s.emotion || '❤️'}</span>
-                    <span style="color: var(--accent-green);">${s.auteur === 'elle' ? '🌸' : s.auteur === 'lui' ? '✨' : '💑'}</span>
+                    <span style="color: #ff6b9d;">${s.auteur === 'elle' ? '🌸' : s.auteur === 'lui' ? '✨' : '💑'}</span>
                 </div>
-                <p style="color: var(--text-primary);">${s.texte}</p>
-                ${s.photo_url ? '<small style="color: var(--text-secondary);">📸 Photo</small>' : ''}
+                <p>${s.texte}</p>
+                ${s.photo_url ? '<small style="color: #888;">📸 Photo</small>' : ''}
             </div>
         `).join('')}
     `;
@@ -209,21 +220,18 @@ window.showAddSouvenirWithDate = function(dateStr) {
 };
 
 // ============================================
-// AJOUT DE SOUVENIR (CORRIGÉ)
+// AJOUT DE SOUVENIR
 // ============================================
 window.showAddSouvenir = function() {
     const today = new Date().toISOString().split('T')[0];
     const dateInput = document.getElementById('souvenir-date');
     if (dateInput && !dateInput.value) dateInput.value = today;
     
-    // Reset photo
     photoFile = null;
     document.getElementById('photo-preview').innerHTML = `
         <i class="fas fa-camera"></i>
         <span>Ajouter une photo</span>
     `;
-    
-    // Reset input file
     document.getElementById('photo-input').value = '';
     
     document.getElementById('souvenir-modal').classList.remove('hidden');
@@ -233,7 +241,7 @@ window.hideModal = function() {
     document.getElementById('souvenir-modal').classList.add('hidden');
 };
 
-// Gestionnaire de photo - CORRIGÉ
+// Gestionnaire de photo
 document.addEventListener('DOMContentLoaded', function() {
     const photoInput = document.getElementById('photo-input');
     if (photoInput) {
@@ -241,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const file = e.target.files[0];
             if (file) {
                 photoFile = file;
-                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('photo-preview').innerHTML = 
@@ -263,7 +270,6 @@ window.saveSouvenir = async function() {
         alert('Écris ton souvenir !');
         return;
     }
-    
     if (!date) {
         alert('Choisis une date !');
         return;
@@ -272,11 +278,9 @@ window.saveSouvenir = async function() {
     try {
         let photoUrl = null;
         
-        // Upload photo si existante
         if (photoFile) {
             console.log("Upload photo:", photoFile.name);
             const fileName = `${Date.now()}_${photoFile.name}`;
-            
             const { error: uploadError } = await supabaseClient.storage
                 .from('souvenirs-photos')
                 .upload(fileName, photoFile);
@@ -290,12 +294,10 @@ window.saveSouvenir = async function() {
             const { data: urlData } = supabaseClient.storage
                 .from('souvenirs-photos')
                 .getPublicUrl(fileName);
-            
             photoUrl = urlData.publicUrl;
             console.log("Photo uploadée:", photoUrl);
         }
         
-        // Sauvegarder le souvenir
         const { error } = await supabaseClient
             .from('souvenirs')
             .insert([{
@@ -310,8 +312,6 @@ window.saveSouvenir = async function() {
         
         alert('✅ Souvenir ajouté !');
         window.hideModal();
-        
-        // Reset form
         document.getElementById('souvenir-text').value = '';
         document.getElementById('photo-input').value = '';
         photoFile = null;
@@ -330,7 +330,10 @@ function subscribeToSouvenirs() {
         .channel('souvenirs_channel')
         .on('postgres_changes', 
             { event: '*', schema: 'public', table: 'souvenirs' },
-            () => loadSouvenirs()
+            () => {
+                console.log("🔄 Changement détecté, rechargement...");
+                loadSouvenirs();
+            }
         )
         .subscribe();
 }
