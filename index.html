@@ -2,76 +2,153 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SyncMusic - Écoutez ensemble</title>
-    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>SOUVENIR · Notre histoire</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>Sync<span>Music</span></h1>
-            <p>Écoutez Spotify ensemble, en temps réel</p>
+    <!-- ÉCRAN DE CONNEXION -->
+    <div id="login-screen" class="screen active">
+        <div class="container login-container">
+            <div class="heart-icon">❤️</div>
+            <h1>SOUVENIR</h1>
+            <p class="subtitle">Notre histoire, nos moments</p>
+            
+            <div class="login-form">
+                <input type="password" id="secret-code" placeholder="Code secret" maxlength="20">
+                <button class="btn-primary" onclick="checkCode()">
+                    <i class="fas fa-lock-open"></i> Accéder
+                </button>
+                <p class="hint">(celui qu'on s'est dit)</p>
+            </div>
         </div>
+    </div>
 
-        <!-- Écran de création/rejoindre -->
-        <div id="home-screen">
-            <div class="input-group">
-                <label>Code de session</label>
-                <input type="text" id="session-code" placeholder="Entrez un code (ex: ABC123)" maxlength="6">
+    <!-- APPLICATION PRINCIPALE -->
+    <div id="app-screen" class="screen hidden">
+        <!-- Header mobile & desktop -->
+        <header>
+            <div class="header-content">
+                <h2>SOUVENIR <span class="heart">❤️</span></h2>
+                <div class="user-info">
+                    <span id="current-user"></span>
+                    <button class="btn-icon" onclick="logout()" title="Se déconnecter">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
             
-            <button class="btn btn-primary" onclick="joinSession()">
-                <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
-                Rejoindre une session
-            </button>
-            
-            <div class="divider">
-                <span>ou</span>
+            <!-- Vue toggle (mobile) -->
+            <div class="view-toggle mobile-only">
+                <button id="view-feed-btn" class="toggle-btn active" onclick="switchView('feed')">
+                    <i class="fas fa-stream"></i> Fil
+                </button>
+                <button id="view-calendar-btn" class="toggle-btn" onclick="switchView('calendar')">
+                    <i class="fas fa-calendar"></i> Calendrier
+                </button>
             </div>
-            
-            <button class="btn btn-secondary" onclick="createSession()">
-                <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>
-                Créer une nouvelle session
-            </button>
-            
-            <p style="text-align: center; margin-top: 30px; color: var(--text-secondary); font-size: 12px;">
-                <i class="fas fa-shield-alt" style="margin-right: 5px;"></i>
-                Sessions privées et sécurisées
-            </p>
-        </div>
+        </header>
 
-        <!-- Écran d'attente (affiché après création) -->
-        <div id="waiting-screen" class="hidden">
-            <div class="session-info">
-                <h2>Code de votre session</h2>
-                <div class="session-code">
-                    <h3>Partagez ce code avec votre ami(e)</h3>
-                    <div class="code" id="display-code">ABC123</div>
+        <main>
+            <!-- VUE FIL (mobile/elle) -->
+            <div id="feed-view" class="view active">
+                <div class="feed-header">
+                    <button class="btn-add" onclick="showAddSouvenir()">
+                        <i class="fas fa-plus-circle"></i> Nouveau souvenir
+                    </button>
+                </div>
+                
+                <div id="souvenirs-feed" class="souvenirs-feed">
+                    <!-- Les souvenirs seront chargés ici -->
+                    <div class="loading">Chargement de nos souvenirs...</div>
                 </div>
             </div>
-            
-            <div class="connected-users">
-                <div class="user connected">
-                    <div class="user-avatar"></div>
-                    <div class="user-name">Vous</div>
+
+            <!-- VUE CALENDRIER (ordinateur/vous) -->
+            <div id="calendar-view" class="view hidden">
+                <div class="calendar-header">
+                    <button class="btn-month" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <h3 id="current-month">Février 2026</h3>
+                    <button class="btn-month" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="user" id="friend-status">
-                    <div class="user-avatar"></div>
-                    <div class="user-name">En attente...</div>
+                
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Les jours seront générés ici -->
+                </div>
+                
+                <div class="selected-day-souvenirs" id="selected-day-souvenirs">
+                    <h4>Cliquez sur un jour</h4>
                 </div>
             </div>
-            
-            <div class="status" id="waiting-message">
-                <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
-                En attente qu'un ami rejoigne...
+        </main>
+
+        <!-- MODAL D'AJOUT DE SOUVENIR -->
+        <div id="souvenir-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Nouveau souvenir</h3>
+                    <button class="btn-close" onclick="hideModal()"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Photo (optionnelle)</label>
+                        <div class="photo-upload">
+                            <input type="file" id="photo-input" accept="image/*" capture="environment">
+                            <div class="photo-preview" id="photo-preview" onclick="document.getElementById('photo-input').click()">
+                                <i class="fas fa-camera"></i>
+                                <span>Ajouter une photo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notre souvenir</label>
+                        <textarea id="souvenir-text" rows="3" placeholder="Raconte ce moment..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Date</label>
+                            <input type="date" id="souvenir-date">
+                        </div>
+                        
+                        <div class="form-group half">
+                            <label>Émotion</label>
+                            <select id="souvenir-emotion">
+                                <option value="❤️">❤️ Amour</option>
+                                <option value="😊">😊 Joie</option>
+                                <option value="🌟">🌟 Spécial</option>
+                                <option value="🥰">🥰 Tendresse</option>
+                                <option value="😂">😂 Rire</option>
+                                <option value="😢">😢 Émotion</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>C'est un souvenir de...</label>
+                        <div class="author-select">
+                            <label class="radio-label">
+                                <input type="radio" name="author" value="elle" checked> Elle
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="author" value="lui"> Lui
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="author" value="nous"> Nous deux
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="hideModal()">Annuler</button>
+                    <button class="btn-primary" onclick="saveSouvenir()">Publier</button>
+                </div>
             </div>
-            
-            <button class="btn btn-secondary" onclick="copyCode()">
-                <i class="fas fa-copy" style="margin-right: 8px;"></i>
-                Copier le code
-            </button>
         </div>
     </div>
 
