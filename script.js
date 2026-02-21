@@ -1,5 +1,5 @@
 // ============================================
-// SOUVENIR - Script principal
+// SOUVENIR - Script principal CORRIGÉ
 // ============================================
 
 // CONFIGURATION SUPABASE (TES CLÉS)
@@ -9,8 +9,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // CODE SECRET (À CHANGER - celui que tu veux)
 const SECRET_CODE = "SOUVENIR2026"; // Change-le !
 
-// Initialisation Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Initialisation Supabase - SANS redéclarer "supabase"
+// On utilise un nom différent pour éviter le conflit
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Variables globales
 let currentUser = null;
@@ -20,9 +21,9 @@ let selectedDate = null;
 let photoFile = null;
 
 // ============================================
-// CONNEXION
+// CONNEXION - RENDUE GLOBALE
 // ============================================
-function checkCode() {
+window.checkCode = function() {
     const code = document.getElementById('secret-code').value;
     
     if (code === SECRET_CODE) {
@@ -47,7 +48,7 @@ function checkCode() {
     } else {
         alert('❌ Code secret incorrect');
     }
-}
+};
 
 // Détecter si c'est elle (mobile) ou lui (ordinateur)
 function detectUser() {
@@ -60,38 +61,46 @@ function detectUser() {
 function adaptViewForUser() {
     if (currentUser === 'elle') {
         // Elle voit le fil par défaut
-        switchView('feed');
-        document.querySelector('.view-toggle').style.display = 'flex';
+        window.switchView('feed');
+        const toggle = document.querySelector('.view-toggle');
+        if (toggle) toggle.style.display = 'flex';
     } else {
         // Lui voit le calendrier par défaut
-        switchView('calendar');
-        document.querySelector('.view-toggle').style.display = 'none';
+        window.switchView('calendar');
+        const toggle = document.querySelector('.view-toggle');
+        if (toggle) toggle.style.display = 'none';
     }
 }
 
 // ============================================
-// CHANGEMENT DE VUE
+// CHANGEMENT DE VUE - RENDU GLOBAL
 // ============================================
-function switchView(view) {
+window.switchView = function(view) {
     // Mettre à jour les boutons
-    document.getElementById('view-feed-btn').classList.toggle('active', view === 'feed');
-    document.getElementById('view-calendar-btn').classList.toggle('active', view === 'calendar');
+    const feedBtn = document.getElementById('view-feed-btn');
+    const calBtn = document.getElementById('view-calendar-btn');
+    
+    if (feedBtn) feedBtn.classList.toggle('active', view === 'feed');
+    if (calBtn) calBtn.classList.toggle('active', view === 'calendar');
     
     // Afficher la bonne vue
-    document.getElementById('feed-view').classList.toggle('active', view === 'feed');
-    document.getElementById('calendar-view').classList.toggle('active', view === 'calendar');
+    const feedView = document.getElementById('feed-view');
+    const calView = document.getElementById('calendar-view');
+    
+    if (feedView) feedView.classList.toggle('active', view === 'feed');
+    if (calView) calView.classList.toggle('active', view === 'calendar');
     
     if (view === 'calendar') {
         renderCalendar();
     }
-}
+};
 
 // ============================================
 // CHARGEMENT DES SOUVENIRS
 // ============================================
 async function loadSouvenirs() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('souvenirs')
             .select('*')
             .order('date', { ascending: false });
@@ -104,8 +113,10 @@ async function loadSouvenirs() {
         
     } catch (error) {
         console.error('Erreur chargement:', error);
-        document.getElementById('souvenirs-feed').innerHTML = 
-            '<div class="loading">Erreur de chargement</div>';
+        const feed = document.getElementById('souvenirs-feed');
+        if (feed) {
+            feed.innerHTML = '<div class="loading">Erreur de chargement</div>';
+        }
     }
 }
 
@@ -114,6 +125,7 @@ async function loadSouvenirs() {
 // ============================================
 function renderFeed() {
     const feed = document.getElementById('souvenirs-feed');
+    if (!feed) return;
     
     if (allSouvenirs.length === 0) {
         feed.innerHTML = `
@@ -154,10 +166,12 @@ function renderCalendar() {
     const month = currentMonth.getMonth();
     
     // Mettre à jour le titre
-    const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-    document.getElementById('current-month').textContent = 
-        `${monthNames[month]} ${year}`;
+    const monthTitle = document.getElementById('current-month');
+    if (monthTitle) {
+        const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+            'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+        monthTitle.textContent = `${monthNames[month]} ${year}`;
+    }
     
     // Premier jour du mois
     const firstDay = new Date(year, month, 1);
@@ -191,13 +205,16 @@ function renderCalendar() {
         
         html += `
             <div class="calendar-day ${hasSouvenir ? 'has-souvenir' : ''} ${isSelected ? 'selected' : ''}"
-                 onclick="selectDate('${dateStr}')">
+                 onclick="window.selectDate('${dateStr}')">
                 ${day}
             </div>
         `;
     }
     
-    document.getElementById('calendar-grid').innerHTML = html;
+    const calendarGrid = document.getElementById('calendar-grid');
+    if (calendarGrid) {
+        calendarGrid.innerHTML = html;
+    }
     
     // Si une date est sélectionnée, afficher ses souvenirs
     if (selectedDate) {
@@ -205,20 +222,21 @@ function renderCalendar() {
     }
 }
 
-function changeMonth(delta) {
+window.changeMonth = function(delta) {
     currentMonth.setMonth(currentMonth.getMonth() + delta);
     renderCalendar();
-}
+};
 
-function selectDate(dateStr) {
+window.selectDate = function(dateStr) {
     selectedDate = dateStr;
     showSouvenirsForDate(dateStr);
     renderCalendar(); // Pour mettre à jour la classe selected
-}
+};
 
 function showSouvenirsForDate(dateStr) {
     const souvenirs = allSouvenirs.filter(s => s.date === dateStr);
     const container = document.getElementById('selected-day-souvenirs');
+    if (!container) return;
     
     if (souvenirs.length === 0) {
         container.innerHTML = `
@@ -245,48 +263,62 @@ function showSouvenirsForDate(dateStr) {
 }
 
 // ============================================
-// AJOUT DE SOUVENIR
+// AJOUT DE SOUVENIR - RENDU GLOBAL
 // ============================================
-function showAddSouvenir() {
+window.showAddSouvenir = function() {
     // Mettre la date du jour par défaut
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('souvenir-date').value = today;
+    const dateInput = document.getElementById('souvenir-date');
+    if (dateInput) dateInput.value = today;
     
     // Reset photo
     photoFile = null;
-    document.getElementById('photo-preview').innerHTML = `
-        <i class="fas fa-camera"></i>
-        <span>Ajouter une photo</span>
-    `;
+    const preview = document.getElementById('photo-preview');
+    if (preview) {
+        preview.innerHTML = `
+            <i class="fas fa-camera"></i>
+            <span>Ajouter une photo</span>
+        `;
+    }
     
-    document.getElementById('souvenir-modal').classList.remove('hidden');
-}
+    const modal = document.getElementById('souvenir-modal');
+    if (modal) modal.classList.remove('hidden');
+};
 
-function hideModal() {
-    document.getElementById('souvenir-modal').classList.add('hidden');
-}
+window.hideModal = function() {
+    const modal = document.getElementById('souvenir-modal');
+    if (modal) modal.classList.add('hidden');
+};
 
 // Gestion de la photo
-document.getElementById('photo-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        photoFile = file;
-        
-        // Aperçu
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('photo-preview').innerHTML = 
-                `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
-        };
-        reader.readAsDataURL(file);
+document.addEventListener('DOMContentLoaded', function() {
+    const photoInput = document.getElementById('photo-input');
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                photoFile = file;
+                
+                // Aperçu
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photo-preview');
+                    if (preview) {
+                        preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px;">`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
 });
 
-async function saveSouvenir() {
-    const text = document.getElementById('souvenir-text').value;
-    const date = document.getElementById('souvenir-date').value;
-    const emotion = document.getElementById('souvenir-emotion').value;
-    const author = document.querySelector('input[name="author"]:checked').value;
+window.saveSouvenir = async function() {
+    const text = document.getElementById('souvenir-text')?.value;
+    const date = document.getElementById('souvenir-date')?.value;
+    const emotion = document.getElementById('souvenir-emotion')?.value;
+    const authorRadio = document.querySelector('input[name="author"]:checked');
+    const author = authorRadio ? authorRadio.value : 'nous';
     
     if (!text) {
         alert('Écris ton souvenir !');
@@ -299,12 +331,12 @@ async function saveSouvenir() {
         // Upload photo si existante
         if (photoFile) {
             const fileName = `${Date.now()}_${photoFile.name}`;
-            const { data, error } = await supabase.storage
+            const { data, error } = await supabaseClient.storage
                 .from('souvenirs-photos')
                 .upload(fileName, photoFile);
             
             if (!error) {
-                const { data: urlData } = supabase.storage
+                const { data: urlData } = supabaseClient.storage
                     .from('souvenirs-photos')
                     .getPublicUrl(fileName);
                 photoUrl = urlData.publicUrl;
@@ -312,7 +344,7 @@ async function saveSouvenir() {
         }
         
         // Sauvegarder le souvenir
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('souvenirs')
             .insert([{
                 texte: text,
@@ -324,20 +356,24 @@ async function saveSouvenir() {
         
         if (error) throw error;
         
-        hideModal();
-        // Le souvenir apparaîtra via la souscription
+        window.hideModal();
+        
+        // Reset form
+        if (document.getElementById('souvenir-text')) {
+            document.getElementById('souvenir-text').value = '';
+        }
         
     } catch (error) {
         console.error('Erreur sauvegarde:', error);
         alert('Erreur : ' + error.message);
     }
-}
+};
 
 // ============================================
 // SYNCHRONISATION EN TEMPS RÉEL
 // ============================================
 function subscribeToSouvenirs() {
-    supabase
+    supabaseClient
         .channel('souvenirs_channel')
         .on('postgres_changes', 
             { event: '*', schema: 'public', table: 'souvenirs' },
@@ -365,13 +401,22 @@ function formatDate(dateStr) {
     return new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-FR', options);
 }
 
-function logout() {
+window.logout = function() {
     localStorage.clear();
-    document.getElementById('app-screen').classList.remove('active');
-    document.getElementById('app-screen').classList.add('hidden');
-    document.getElementById('login-screen').classList.add('active');
-    document.getElementById('secret-code').value = '';
-}
+    const appScreen = document.getElementById('app-screen');
+    const loginScreen = document.getElementById('login-screen');
+    
+    if (appScreen) {
+        appScreen.classList.remove('active');
+        appScreen.classList.add('hidden');
+    }
+    if (loginScreen) {
+        loginScreen.classList.add('active');
+    }
+    
+    const codeInput = document.getElementById('secret-code');
+    if (codeInput) codeInput.value = '';
+};
 
 // ============================================
 // INITIALISATION
@@ -382,12 +427,14 @@ window.onload = function() {
 
 // Adaptation au resize (pour détecter mobile/ordi)
 window.addEventListener('resize', () => {
-    if (document.getElementById('app-screen').classList.contains('active')) {
+    if (document.getElementById('app-screen')?.classList.contains('active')) {
         const newUser = detectUser();
         if (newUser !== currentUser) {
             currentUser = newUser;
-            document.getElementById('current-user').textContent = 
-                currentUser === 'elle' ? 'C\'est toi 🌸' : 'C\'est toi ✨';
+            const userEl = document.getElementById('current-user');
+            if (userEl) {
+                userEl.textContent = currentUser === 'elle' ? 'C\'est toi 🌸' : 'C\'est toi ✨';
+            }
             adaptViewForUser();
         }
     }
