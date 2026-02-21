@@ -14,7 +14,6 @@
         <div class="login-container">
             <h1>SOUVENIR</h1>
             <p class="subtitle">Notre histoire, nos moments</p>
-            
             <div class="login-form">
                 <input type="password" id="secret-code" placeholder="Code secret" maxlength="20">
                 <button class="btn-primary" onclick="checkCode()">
@@ -27,7 +26,6 @@
 
     <!-- APPLICATION PRINCIPALE -->
     <div id="app-screen" class="screen hidden">
-        <!-- Header -->
         <header>
             <div class="header-content">
                 <h2>SOUVENIR</h2>
@@ -38,8 +36,6 @@
                     </button>
                 </div>
             </div>
-            
-            <!-- Vue toggle (mobile) -->
             <div class="view-toggle mobile-only">
                 <button id="view-feed-btn" class="toggle-btn active" onclick="switchView('feed')">
                     <i class="fas fa-stream"></i> Fil
@@ -58,7 +54,6 @@
                         <i class="fas fa-plus-circle"></i> Nouveau souvenir
                     </button>
                 </div>
-                
                 <div id="souvenirs-feed" class="souvenirs-feed">
                     <div class="loading">Chargement de nos souvenirs...</div>
                 </div>
@@ -71,9 +66,7 @@
                     <h3 id="current-month">Février 2026</h3>
                     <button class="btn-month" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                
                 <div class="calendar-grid" id="calendar-grid"></div>
-                
                 <div class="selected-day-souvenirs" id="selected-day-souvenirs">
                     <h4>Cliquez sur un jour</h4>
                 </div>
@@ -87,7 +80,6 @@
                     <h3>Nouveau souvenir</h3>
                     <button class="btn-close" onclick="hideModal()"><i class="fas fa-times"></i></button>
                 </div>
-                
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Photo (optionnelle)</label>
@@ -99,18 +91,15 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label>Notre souvenir</label>
                         <textarea id="souvenir-text" rows="3" placeholder="Raconte ce moment..."></textarea>
                     </div>
-                    
                     <div class="form-row">
                         <div class="form-group half">
                             <label>Date</label>
                             <input type="date" id="souvenir-date">
                         </div>
-                        
                         <div class="form-group half">
                             <label>Émotion</label>
                             <select id="souvenir-emotion">
@@ -123,7 +112,6 @@
                             </select>
                         </div>
                     </div>
-                    
                     <div class="form-group">
                         <label>C'est un souvenir de...</label>
                         <div class="author-select">
@@ -139,7 +127,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="modal-footer">
                     <button class="btn-secondary" onclick="hideModal()">Annuler</button>
                     <button class="btn-primary" onclick="saveSouvenir()">Publier</button>
