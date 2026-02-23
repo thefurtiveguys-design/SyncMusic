@@ -3,142 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Influencer Scraper Pro</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Influencer Scanner Pro</title>
+    <style>
+        /* ===== STYLES DIRECTEMENT DANS LE HTML ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Search Card */
+        .search-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 2;
+            min-width: 250px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .platform-select {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .search-btn {
+            flex: 0.5;
+            min-width: 150px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.4);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .examples {
+            margin-top: 15px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error */
+        .error-message {
+            display: none;
+            background: #fee;
+            color: #f44336;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #f44336;
+        }
+
+        /* Results */
+        .results-card {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .profile-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .profile-bio {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card.highlight {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .highlight .stat-value,
+        .highlight .stat-label {
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-pdf {
+            padding: 12px 25px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            padding: 12px 25px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 28px; }
+            .search-box { flex-direction: column; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
-        <header class="header">
-            <div class="logo">INFLUENCER <span>SCRAPER</span></div>
+        <div class="header">
+            <div class="logo">INFLUENCER SCANNER</div>
             <div class="status" id="status">
-                <span class="status-dot" id="statusDot"></span>
-                <span id="statusText">Vérification...</span>
+                <span class="status-dot"></span>
+                <span>Prêt</span>
             </div>
-        </header>
+        </div>
 
-        <!-- Main content -->
-        <main class="main">
-            <!-- Hero section -->
-            <div class="hero">
-                <h1>Analysez n'importe quel influenceur</h1>
-                <p>Instagram · TikTok · YouTube · Données en temps réel</p>
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Analysez n'importe quel influenceur</h1>
+            <p>Instagram · TikTok · YouTube · Gratuit et instantané</p>
+        </div>
+
+        <!-- Search Card -->
+        <div class="search-card">
+            <div class="search-box">
+                <input type="text" id="username" class="search-input" 
+                       placeholder="@leomessi ou URL">
+                <select id="platform" class="platform-select">
+                    <option value="auto">🌐 Auto</option>
+                    <option value="instagram">📷 Instagram</option>
+                    <option value="tiktok">🎵 TikTok</option>
+                    <option value="youtube">▶️ YouTube</option>
+                </select>
+                <button onclick="analyze()" id="analyzeBtn" class="search-btn">
+                    ANALYSER
+                </button>
+            </div>
+            <div class="examples">
+                Exemples : @leomessi · @charlidamelio · @MrBeast
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyse en cours... (10-15 secondes)</p>
+        </div>
+
+        <!-- Error -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Results -->
+        <div class="results-card" id="results">
+            <div class="profile-header">
+                <h2 id="profileName">@nom</h2>
+                <p class="profile-bio" id="profileBio">Bio de l'influenceur</p>
+                <span class="badge" id="profileNiche">🌟 Général</span>
             </div>
 
-            <!-- Search card -->
-            <div class="search-card">
-                <div class="search-header">
-                    <h2>🔍 Rechercher un influenceur</h2>
-                </div>
-                
-                <div class="search-box">
-                    <input type="text" 
-                           id="username" 
-                           placeholder="@leomessi ou URL complète"
-                           class="search-input">
-                    
-                    <select id="platform" class="platform-select">
-                        <option value="auto">🌐 Auto-détection</option>
-                        <option value="instagram">📷 Instagram</option>
-                        <option value="tiktok">🎵 TikTok</option>
-                        <option value="youtube">▶️ YouTube</option>
-                    </select>
-                    
-                    <button onclick="analyze()" id="analyzeBtn" class="search-btn">
-                        ANALYSER
-                    </button>
-                </div>
-
-                <div class="examples">
-                    Exemples : @leomessi · @charlidamelio · @MrBeast
-                </div>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Les stats seront ajoutées ici -->
             </div>
 
-            <!-- Loading indicator -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Analyse en cours... Cela peut prendre quelques secondes</p>
+            <div class="action-buttons">
+                <button onclick="exportPDF()" class="btn-pdf">
+                    📄 PDF
+                </button>
+                <button onclick="resetSearch()" class="btn-reset">
+                    ↺ Nouvelle recherche
+                </button>
             </div>
+        </div>
 
-            <!-- Error message -->
-            <div class="error-message" id="errorMessage"></div>
-
-            <!-- Results card -->
-            <div class="results-card" id="results">
-                <div class="profile-header">
-                    <div class="profile-info">
-                        <h2 id="profileName">En attente d'analyse</h2>
-                        <p id="profileBio" class="profile-bio"></p>
-                        <span class="badge" id="profileNiche"></span>
-                    </div>
-                </div>
-
-                <div class="stats-grid" id="statsGrid">
-                    <!-- Les stats seront injectées ici -->
-                </div>
-
-                <div class="action-buttons">
-                    <button onclick="exportPDF()" class="btn-pdf">
-                        📄 Télécharger rapport PDF
-                    </button>
-                    <button onclick="resetSearch()" class="btn-reset">
-                        ↺ Nouvelle recherche
-                    </button>
-                </div>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p>© 2024 Influencer Scraper Pro · Données en temps réel</p>
-        </footer>
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2024 Influencer Scanner · Données en temps réel</p>
+        </div>
     </div>
 
     <script>
-        // Configuration
-        const API_URL = '';  // Vide car même domaine
+        // ===== CONFIGURATION =====
+        // Mets ici l'URL de ton backend sur Render
+        const API_URL = 'https://influencer-analyzer-backend.onrender.com';
 
-        // État global
-        let currentData = null;
-
-        // Vérification du serveur au chargement
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('/api/health');
-                if (response.ok) {
-                    setStatus('online', 'Serveur connecté');
-                } else {
-                    setStatus('offline', 'Serveur inaccessible');
-                }
-            } catch (error) {
-                setStatus('offline', 'Serveur hors ligne');
-            }
-        });
-
-        function setStatus(state, text) {
-            const dot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            
-            dot.className = 'status-dot ' + state;
-            statusText.textContent = text;
-        }
-
+        // ===== FONCTIONS =====
         async function analyze() {
             const username = document.getElementById('username').value.trim();
             const platform = document.getElementById('platform').value;
-            
+
             if (!username) {
                 showError('Veuillez entrer un pseudo');
                 return;
             }
 
-            // UI loading
+            // Afficher loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('results').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('analyzeBtn').disabled = true;
 
             try {
-                const response = await fetch('/api/analyze', {
+                const response = await fetch(`${API_URL}/api/analyze`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, platform })
@@ -150,7 +416,6 @@
                 document.getElementById('analyzeBtn').disabled = false;
 
                 if (response.ok) {
-                    currentData = data;
                     displayResults(data);
                 } else {
                     showError(data.error || 'Erreur lors de l\'analyse');
@@ -166,15 +431,17 @@
             document.getElementById('results').style.display = 'block';
             
             if (data.multi) {
+                // Résultats multi-plateformes
                 displayMultiResults(data.results);
             } else {
+                // Résultat simple
                 document.getElementById('profileName').textContent = `@${data.username}`;
                 document.getElementById('profileBio').textContent = data.bio || 'Aucune bio disponible';
                 document.getElementById('profileNiche').textContent = detectNiche(data.bio || '');
                 
                 let statsHtml = `
                     <div class="stat-card">
-                        <div class="stat-value">${formatNumber(data.followers)}</div>
+                        <div class="stat-value">${formatNumber(data.followers || 0)}</div>
                         <div class="stat-label">Followers</div>
                     </div>
                     <div class="stat-card">
@@ -185,7 +452,7 @@
                         <div class="stat-value">${formatNumber(data.posts || 0)}</div>
                         <div class="stat-label">Publications</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card highlight">
                         <div class="stat-value">${calculateEngagement(data)}%</div>
                         <div class="stat-label">Engagement</div>
                     </div>
@@ -198,7 +465,7 @@
         function displayMultiResults(results) {
             document.getElementById('profileName').textContent = 'Multi-plateforme';
             document.getElementById('profileBio').textContent = 
-                `Résultats sur ${results.length} plateforme(s)`;
+                `${results.length} réseaux analysés`;
             document.getElementById('profileNiche').textContent = 'Analyse complète';
             
             let totalFollowers = 0;
@@ -233,24 +500,18 @@
 
         function calculateEngagement(data) {
             if (!data.followers) return '0.0';
-            const engagement = ((data.likes || 0) / data.followers * 100).toFixed(1);
-            return engagement;
+            const likes = data.likes || data.engagement || 0;
+            return ((likes / data.followers) * 100).toFixed(1);
         }
 
         function detectNiche(bio) {
             bio = bio.toLowerCase();
-            if (bio.includes('fitness') || bio.includes('gym') || bio.includes('workout')) 
-                return '🏋️ Fitness';
-            if (bio.includes('travel') || bio.includes('voyage') || bio.includes('trip')) 
-                return '✈️ Voyage';
-            if (bio.includes('fashion') || bio.includes('mode') || bio.includes('style')) 
-                return '👗 Mode';
-            if (bio.includes('tech') || bio.includes('gadget') || bio.includes('iphone')) 
-                return '💻 Tech';
-            if (bio.includes('food') || bio.includes('cuisine') || bio.includes('recipe')) 
-                return '🍳 Cuisine';
-            if (bio.includes('gaming') || bio.includes('jeux') || bio.includes('twitch')) 
-                return '🎮 Gaming';
+            if (bio.includes('fitness') || bio.includes('gym')) return '💪 Fitness';
+            if (bio.includes('travel') || bio.includes('voyage')) return '✈️ Voyage';
+            if (bio.includes('fashion') || bio.includes('mode')) return '👗 Mode';
+            if (bio.includes('tech') || bio.includes('gadget')) return '💻 Tech';
+            if (bio.includes('food') || bio.includes('cuisine')) return '🍳 Cuisine';
+            if (bio.includes('gaming') || bio.includes('jeux')) return '🎮 Gaming';
             return '🌟 Général';
         }
 
@@ -263,18 +524,25 @@
         function resetSearch() {
             document.getElementById('username').value = '';
             document.getElementById('results').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'none';
         }
 
         function exportPDF() {
-            if (!currentData) return;
             alert('Fonctionnalité PDF à venir !');
-            // Ici tu pourras ajouter l'export PDF plus tard
         }
 
-        // Enter key pour lancer la recherche
+        // Enter key
         document.getElementById('username').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') analyze();
+        });
+
+        // Test connexion au démarrage
+        window.addEventListener('load', async () => {
+            try {
+                await fetch(`${API_URL}/api/health`);
+                console.log('✅ Connecté au serveur');
+            } catch (error) {
+                showError('Serveur en maintenance, réessaie dans 1 minute');
+            }
         });
     </script>
 </body>
